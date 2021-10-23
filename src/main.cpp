@@ -197,6 +197,7 @@ void setup(){
       pixels.show();
       if (activeProgram!=4) {
         newProgram = 4;
+        activeProgram = 4;
       }
     } else {
       status += "missing parameter 'led'";
