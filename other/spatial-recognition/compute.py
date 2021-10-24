@@ -35,6 +35,7 @@ for i in range(nummeasures-1):
 #for p in positions[0]:
 #    print("translate([%f,%f,%f]) cube(l);"% (p[0], p[1], p[2])) 
 
-print([list(e) for e in positions[0]])
+print([list(map(lambda x:round(x,1), list(e))) for e in positions[0]])
+
 
 
