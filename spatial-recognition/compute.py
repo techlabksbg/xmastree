@@ -32,8 +32,9 @@ for i in range(nummeasures-1):
 
 #TODO weed out outliers, come up with a median of points or something (if more than 2 measurements have been performed)
 
-for p in positions[0]:
-    print("translate([%f,%f,%f]) cube(l);"% (p[0], p[1], p[2])) 
+#for p in positions[0]:
+#    print("translate([%f,%f,%f]) cube(l);"% (p[0], p[1], p[2])) 
 
+print([list(e) for e in positions[0]])
 
 
