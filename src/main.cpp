@@ -51,7 +51,7 @@ AsyncWebServer server(80);
 
 int activeProgram = 0;
 int newProgram = 2;
-int numPrograms = 4;
+int numPrograms = 6;
 int brightness = 255;
 int speed = 35;
 uint32_t color1 = 0xff0000;
@@ -393,7 +393,22 @@ void fade(unsigned int &counter) {
 }
 
 void valueBitmap(unsigned int &counter) {
-  
+  static File bitmap;
+  static char values[NUMPIXEL];
+  if (!bitmap) {
+    bitmap = SPIFFS.open("/values.bin");
+    Serial.println("values.bin opened");
+  }
+  bitmap.readBytes(values, NUMPIXEL);
+  for (int i=0; i<NUMPIXEL; i++) {
+    pixels.setPixelColor(i, values[i] | values[i]<<8 | values[i]<<16);
+  }
+  pixels.show();
+  if (! bitmap.available()) {
+    bitmap.close();
+  }
+
+
 }
 
 unsigned int counter = 0; 
@@ -426,6 +441,10 @@ void loop() {
         break;
       case 4:
         break; // Do nothing, single led has been set.
+      case 5:
+        valueBitmap(counter);
+        nextStep+=265-speed; // 10 fps
+        break;
     }
     counter++;
   }
