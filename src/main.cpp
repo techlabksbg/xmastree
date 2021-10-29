@@ -392,6 +392,10 @@ void fade(unsigned int &counter) {
   pixels.show();
 }
 
+void valueBitmap(unsigned int &counter) {
+  
+}
+
 unsigned int counter = 0; 
 unsigned long nextStep = millis();
 void loop() {
