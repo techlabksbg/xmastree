@@ -51,13 +51,25 @@ AsyncWebServer server(80);
 
 int activeProgram = 0;
 int newProgram = 2;
-int numPrograms = 6;
+int numPrograms = 7;
 int brightness = 255;
 int speed = 35;
 uint32_t color1 = 0xff0000;
 uint32_t color2 = 0x0000ff;
 
+float posdata[NUMPIXEL][3];
 
+void readPosData() {
+  File f = SPIFFS.open("/posdata.txt", FILE_READ);
+  if (f) {
+    for (int i=0; i<NUMPIXEL; i++) {
+      for (int k=0; k<3; k++) {
+        posdata[i][k] = f.parseFloat();
+      }
+    }
+    f.close();
+  }
+}
 
 // Replaces placeholder with LED state value
 String processor(const String& var){
@@ -97,6 +109,8 @@ void setup(){
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
   }
+
+  readPosData();
 
   // Connect to Wi-Fi
   WiFi.mode(WIFI_STA);
@@ -407,8 +421,47 @@ void valueBitmap(unsigned int &counter) {
   if (! bitmap.available()) {
     bitmap.close();
   }
+}
 
-
+void movingPlanes(unsigned int counter) {
+  static float normal[3] {0,0,1};
+  static float d = 60;
+  static float dd = 0.5;
+  int c = 0;
+  for (int i=0; i<NUMPIXEL; i++) {
+    float sp = normal[0]*posdata[i][0]+normal[1]*posdata[i][1]+normal[2]*posdata[i][2]-d;
+    pixels.setPixelColor(i, sp>0 ? color1 : color2);
+    if (sp>0) c++;
+  }
+  pixels.show();
+  d+=dd;
+  if (c==0 || c==NUMPIXEL) {
+    float l=2.0;
+    while (l>1.0) {
+      l = 0.0;
+      for (int i=0; i<3; i++) {
+        normal[i] = (float)rand()/RAND_MAX;
+        l += normal[i]*normal[i];
+      }
+    }
+    l = sqrt(l);
+    for (int i=0; i<3; i++) normal[i]/=l;
+    float m = 120.0*normal[2];
+    for (int i=0; i<NUMPIXEL; i++) {
+      float sp = normal[0]*posdata[i][0]+normal[1]*posdata[i][1]+normal[2]*posdata[i][2];
+      if (c==0 && sp>m) {
+        m=sp;
+      } else if (sp<m) {
+        m=sp;
+      }
+    }
+    d = m*0.99;
+    if (d>0) {
+      dd = -0.5;
+    } else {
+      dd = 0.5;
+    }
+  }
 }
 
 unsigned int counter = 0; 
@@ -444,6 +497,10 @@ void loop() {
       case 5:
         valueBitmap(counter);
         nextStep+=265-speed; // 10 fps
+        break;
+      case 6:
+        movingPlanes(counter);
+        nextStep+=(265-speed)/4; 
         break;
     }
     counter++;
