@@ -51,7 +51,7 @@ AsyncWebServer server(80);
 
 int activeProgram = 0;
 int newProgram = 2;
-int numPrograms = 7;
+int numPrograms = 8;
 int brightness = 255;
 int speed = 35;
 uint32_t color1 = 0xff0000;
@@ -415,7 +415,7 @@ void valueBitmap(unsigned int &counter) {
   }
   bitmap.readBytes(values, NUMPIXEL);
   for (int i=0; i<NUMPIXEL; i++) {
-    pixels.setPixelColor(i, values[i] | values[i]<<8 | values[i]<<16);
+    pixels.setPixelColor(i, scale(values[i]/255.0,color1));
   }
   pixels.show();
   if (! bitmap.available()) {
@@ -424,44 +424,36 @@ void valueBitmap(unsigned int &counter) {
 }
 
 void movingPlanes(unsigned int counter) {
-  static float normal[3] {0,0,1};
-  static float d = 60;
-  static float dd = 0.5;
-  int c = 0;
+  float normal[3] {0,0,1};
+  float d = sin(counter*0.04)*75+110.0;
   for (int i=0; i<NUMPIXEL; i++) {
     float sp = normal[0]*posdata[i][0]+normal[1]*posdata[i][1]+normal[2]*posdata[i][2]-d;
     pixels.setPixelColor(i, sp>0 ? color1 : color2);
-    if (sp>0) c++;
+  }
+  pixels.show(); 
+}
+
+void whirl(unsigned int &counter) {
+  if (counter == 500) counter = 0;
+  float t = counter*0.002;
+  float w = t*60;
+  float h = 20+t*180;
+  float r = 40-t*35;
+  float p[3] {r*cos(w), r*sin(w), h};
+  for (int i=0; i<NUMPIXEL; i++) {
+    float l = 0.0;
+    for (int k=0; k<3; k++) {  
+      float d = posdata[i][k]-p[k];
+      l+=d*d;
+    }
+    if (l<5*5) {
+      l = 1.0;  
+    } else {
+      l = 25.0*25.0/l/l;
+    }
+    pixels.setPixelColor(i, scale(l, mix(t)));
   }
   pixels.show();
-  d+=dd;
-  if (c==0 || c==NUMPIXEL) {
-    float l=2.0;
-    while (l>1.0) {
-      l = 0.0;
-      for (int i=0; i<3; i++) {
-        normal[i] = (float)rand()/RAND_MAX;
-        l += normal[i]*normal[i];
-      }
-    }
-    l = sqrt(l);
-    for (int i=0; i<3; i++) normal[i]/=l;
-    float m = 120.0*normal[2];
-    for (int i=0; i<NUMPIXEL; i++) {
-      float sp = normal[0]*posdata[i][0]+normal[1]*posdata[i][1]+normal[2]*posdata[i][2];
-      if (c==0 && sp>m) {
-        m=sp;
-      } else if (sp<m) {
-        m=sp;
-      }
-    }
-    d = m*0.99;
-    if (d>0) {
-      dd = -0.5;
-    } else {
-      dd = 0.5;
-    }
-  }
 }
 
 unsigned int counter = 0; 
@@ -500,6 +492,10 @@ void loop() {
         break;
       case 6:
         movingPlanes(counter);
+        nextStep+=(265-speed)/4; 
+        break;
+      case 7:
+        whirl(counter);
         nextStep+=(265-speed)/4; 
         break;
     }
