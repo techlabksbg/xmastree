@@ -51,7 +51,7 @@ AsyncWebServer server(80);
 
 int activeProgram = 0;
 int newProgram = 2;
-int numPrograms = 8;
+int numPrograms = 9;
 int brightness = 255;
 int speed = 35;
 uint32_t color1 = 0xff0000;
@@ -301,6 +301,23 @@ void cycleHSV(unsigned int &counter) {
   pixels.show();
 }
 
+void rainsphere(unsigned int &counter) {
+  float zero[3] {0,0,100};
+  if (counter>=100) counter = 0;
+  for (int i=0; i<NUMPIXEL; i++) {  
+    float l=0;
+    for (int k=0; k<3; k++) {
+      float d = posdata[i][k]-zero[k];
+      l+=d*d;
+    }
+    l = sqrt(l);
+    int hue = (l/100.0+1-counter*0.01)*0xffff;
+    hue %= 0xffff;
+    pixels.setPixelColor(i, pixels.ColorHSV(hue));
+  }
+  pixels.show();
+}
+
 void stars(unsigned int &counter) {
   float f = (speed>100) ? fmap(speed, 100,255, 1,10) : fmap(speed, 0,100, 0.2, 1);
   if (counter>=1000/f) {
@@ -497,6 +514,10 @@ void loop() {
       case 7:
         whirl(counter);
         nextStep+=(265-speed)/4; 
+        break;
+      case 8:
+        rainsphere(counter);
+        nextStep+=(265-speed)/2; 
         break;
     }
     counter++;
