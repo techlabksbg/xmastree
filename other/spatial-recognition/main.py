@@ -253,7 +253,7 @@ while ledsok<NUMLEDS:
 stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
 
 datafile = open("posdata-"+stamp+"-%d-%d-%d.txt" % (campos[0,0], campos[1,0],campos[2,0]), "w")
-datafile.write("%f %f %f\n" % (campos[0,0], campos[1,0], campos[2,0]))
+datafile.write("%f %f %f 0.0\n" % (campos[0,0], campos[1,0], campos[2,0]))
 for nr in range(NUMLEDS):
     wo,c = weightedMedian(ledPos[nr], confidence[nr])
     datafile.write("%.1f %.1f %.1f %.3f\n" %(wo[0,0], wo[1,0], wo[2,0], c))
