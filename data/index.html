@@ -65,12 +65,13 @@ function makeColor(img, event, name) {
 	</script>
   <h1>Xmas Tree Web Server</h1>
   <!--  <p>Active Programm: <strong> %STATE%</strong></p> -->
-  <p><button class="button" onclick="state['nr']=0;setProgram();">Rainbow</button></p>
-  <p><button class="button" onclick="state['nr']=1;setProgram();">Running</button></p>
-  <p><button class="button" onclick="state['nr']=2;setProgram();">Sparkling</button></p>
-  <p><button class="button" onclick="state['nr']=3;setProgram();">Fading</button></p>
-  <p><button class="button" onclick="state['nr']=5;setProgram();">Tech-Lab</button></p>
-  <p><button class="button" onclick="state['nr']=6;setProgram();">Moving planes</button></p>
+  <p><button class="button" onclick="state['nr']=0;setProgram();">Rainbow</button>
+  <button class="button" onclick="state['nr']=1;setProgram();">Running</button>
+  <button class="button" onclick="state['nr']=2;setProgram();">Sparkling</button>
+  <button class="button" onclick="state['nr']=3;setProgram();">Fading</button>
+  <button class="button" onclick="state['nr']=5;setProgram();">Tech-Lab</button>
+  <button class="button" onclick="state['nr']=6;setProgram();">Up'n down</button>
+  <button class="button" onclick="state['nr']=7;setProgram();">Whirl</button></p>
   <div><input type="range" id="brightness" name="brightness"
          min="0" max="255" value="%BRIGHTNESS%" onchange="state['brightness']=this.value;setProgram();">
 	  <label for="brightness">Brightness</label>
