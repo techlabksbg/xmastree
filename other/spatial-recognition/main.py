@@ -94,8 +94,8 @@ def getPoints(img):
     poly = np.int32(np.array(poly[0:2,:].transpose()))
     print(poly)
 
-    # FIXME get image size from img
-    mask = np.zeros((480,640),dtype=np.uint8)
+    h,w = img.shape[0:2]
+    mask = np.zeros((h,w),dtype=np.uint8)
     cv.fillPoly(mask,pts=[poly], color=255)
     cv.imshow('diff', mask)
     sleep(2)
