@@ -39,6 +39,8 @@ void loop() {
         params.activeProgram = params.newProgram;
         nextStep = millis();
         counter = 0;
+        params.pixels->clear();
+        params.pixels->show();
     }
     if (millis()>nextStep) {
         nextStep += 40;  // 25fps;
