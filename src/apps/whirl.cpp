@@ -6,7 +6,7 @@
 class Whirl : App {
     public:
     virtual void loop(unsigned int &counter);
-    const char* buttonName = "Up'n down";
+    virtual const char* buttonName() { return "Whirl"; }
 };
 
 

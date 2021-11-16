@@ -5,7 +5,7 @@
 class HSVCycle : App {
     public:
     virtual void loop(unsigned int &counter);
-    const char* buttonName = "HSV Cycle";
+    virtual const char* buttonName() { return "HSV Cycle"; }
 };
 
 

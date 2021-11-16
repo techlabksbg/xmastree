@@ -5,7 +5,7 @@
 class Fade : App {
     public:
     virtual void loop(unsigned int &counter);
-    const char* buttonName = "Fade";
+    virtual const char* buttonName() { return "Fade"; }
 };
 
 

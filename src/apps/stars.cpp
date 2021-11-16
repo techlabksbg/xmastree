@@ -5,7 +5,7 @@
 class Stars : App {
     public:
     virtual void loop(unsigned int &counter);
-    const char* buttonName = "Stars";
+    virtual const char* buttonName() { return "Stars"; }
 };
 
 

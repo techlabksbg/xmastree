@@ -7,7 +7,7 @@
 class Funkeln : App {
     public:
     virtual void loop(unsigned int &counter);
-    const char* buttonName = "Funkeln";
+    virtual const char* buttonName() { return "Funkeln"; }
 };
 
 

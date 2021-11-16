@@ -4,7 +4,7 @@
 class RainSphere : App {
     public:
     virtual void loop(unsigned int &counter);
-    const char* buttonName = "RainSphere";
+    virtual const char* buttonName() { return "RainSphere"; }
 };
 
 

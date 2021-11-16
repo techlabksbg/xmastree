@@ -118,7 +118,7 @@ String processor(const String& var) {
           res += "<button class=\"button\" onclick=\"state['nr']=";
           res += i;
           res += ";setProgram();\">";
-          res += params.apps[i]->buttonName;
+          res += params.apps[i]->buttonName();
           res += "</button>\n";
       }
       return res;

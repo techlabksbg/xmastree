@@ -6,7 +6,7 @@
 class ValueBitmap : App {
     public:
     virtual void loop(unsigned int &counter);
-    const char* buttonName = "Tech-Lab";
+    virtual const char* buttonName() { return "Tech-Lab"; }
 };
 
 

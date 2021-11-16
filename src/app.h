@@ -17,7 +17,7 @@
 class App {
     public:
     App();
-    const char* buttonName = "App";
+    virtual const char* buttonName(){return "App";}
 
     virtual void loop(unsigned int &counter) {}
 };
