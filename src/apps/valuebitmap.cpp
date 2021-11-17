@@ -5,25 +5,30 @@
 
 class ValueBitmap : App {
     public:
-    virtual void loop(unsigned int &counter);
+    virtual void loop();
     virtual const char* buttonName() { return "Tech-Lab"; }
+    virtual bool loopFast() { return true; }
 };
 
 
-void ValueBitmap::loop(unsigned int &counter) {
-   static File bitmap;
+void ValueBitmap::loop() {
+    static File bitmap;
     static char values[NUMPIXEL];
-    if (!bitmap) {
-        bitmap = SPIFFS.open("/values.bin");
-        Serial.println("values.bin opened");
-    }
-    bitmap.readBytes(values, NUMPIXEL);
-    for (int i=0; i<NUMPIXEL; i++) {
-        params.pixels->setPixelColor(i, scale(values[i]/255.0,params.color1));
-    }
-    params.pixels->show();
-    if (! bitmap.available()) {
-        bitmap.close();
+    static unsigned int nextFrame = 0;
+    if (millis()>nextFrame) {
+        nextFrame = millis()+fmap(params.speed, 0, 255, 200, 4);
+        if (!bitmap) {
+            bitmap = SPIFFS.open("/values.bin");
+            Serial.println("values.bin opened");
+        }
+        bitmap.readBytes(values, NUMPIXEL);
+        for (int i=0; i<NUMPIXEL; i++) {
+            params.pixels->setPixelColor(i, scale(values[i]/255.0,params.color1));
+        }
+        params.pixels->show();
+        if (! bitmap.available()) {
+            bitmap.close();
+        }
     }
 }
 

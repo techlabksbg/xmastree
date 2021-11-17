@@ -4,18 +4,16 @@
 
 class HSVCycle : App {
     public:
-    virtual void loop(unsigned int &counter);
+    virtual void loop();
     virtual const char* buttonName() { return "HSV Cycle"; }
 };
 
 
-void HSVCycle::loop(unsigned int &counter) {
-    float f = (params.speed>100) ? fmap(params.speed, 100,255,2,0.2) : fmap(params.speed, 0,100,10,2);
-    if (counter>=f*NUMPIXEL) {
-        counter = 0;
-    }
+void HSVCycle::loop() {
+    float t = secs()/fmap(params.speed, 0, 255, 20, 1.0);
     for (int i=0; i<NUMPIXEL; i++) {
-        params.pixels->setPixelColor(i, params.pixels->ColorHSV( ((int)((i+counter/f)*65535/NUMPIXEL))%0xffff ));
+        float h = fmod(((float)i)/NUMPIXEL+t,1.0);
+        params.pixels->setPixelColor(i, params.pixels->ColorHSV((int)(h*65535)));
     }
     params.pixels->show();
 }

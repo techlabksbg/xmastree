@@ -5,14 +5,13 @@
 
 class Whirl : App {
     public:
-    virtual void loop(unsigned int &counter);
+    virtual void loop();
     virtual const char* buttonName() { return "Whirl"; }
 };
 
 
-void Whirl::loop(unsigned int &counter) {
-   if (counter == 500) counter = 0;
-    float t = counter*0.002;
+void Whirl::loop() {
+    float t = fmod(secs()/fmap(params.speed, 0, 255, 40, 2.0),1.0);
     float w = t*60;
     float h = 20+t*180;
     float r = 40-t*35;
@@ -26,7 +25,7 @@ void Whirl::loop(unsigned int &counter) {
         if (l<5*5) {
             l = 1.0;  
         } else {
-            l = 25.0*25.0/l/l;
+            l = pow(25.0/l,4);
         }
         params.pixels->setPixelColor(i, scale(l, mix(t)));
     }

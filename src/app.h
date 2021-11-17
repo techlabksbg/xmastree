@@ -18,6 +18,11 @@ class App {
     public:
     App();
     virtual const char* buttonName(){return "App";}
+    virtual bool loopFast() { return false; }
+    virtual void loop() {}
+    float secs();
+private:
+    unsigned int start=0;
+    unsigned int last=0;
 
-    virtual void loop(unsigned int &counter) {}
 };

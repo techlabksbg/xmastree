@@ -4,18 +4,17 @@
 
 class Fade : App {
     public:
-    virtual void loop(unsigned int &counter);
+    virtual void loop();
     virtual const char* buttonName() { return "Fade"; }
 };
 
 
-void Fade::loop(unsigned int &counter) {
-    if (counter>=params.speed*5+20) {
-        counter=0;
-    }    
-    float t = ((float)(counter))/(params.speed*5+20);
-    t = cos(t*2*PI)/2+0.5;
-    int c = mix(t);
+void Fade::loop() {   
+    float t = secs();  // Get time in seconds
+    t = t/fmap(params.speed, 0, 255, 20, 1.0);
+
+    float w = cos(t*2*PI)/2+0.5;
+    int c = mix(w);
     for (int i=0; i<NUMPIXEL; i++) {
         params.pixels->setPixelColor(i,c);
     }

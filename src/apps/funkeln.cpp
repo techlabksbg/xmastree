@@ -6,26 +6,21 @@
 
 class Funkeln : App {
     public:
-    virtual void loop(unsigned int &counter);
+    virtual void loop();
     virtual const char* buttonName() { return "Funkeln"; }
 };
 
 
-void Funkeln::loop(unsigned int &counter) {
+void Funkeln::loop() {
     static int pos[NUMFUNK];
     static int colors[NUMFUNK];
     static int count[NUMFUNK];
     static int len[NUMFUNK];
-    static bool start=true;
 
-    if (counter==0) {
+    if (secs()==0.0) {
         for (int i=0; i<NUMPIXEL; i++) {
             params.pixels->setPixelColor(i,0);
         }
-    }
-
-    if (start) {
-        start = false;
         // Delay to connect to wifi will be random enough
         randomSeed(micros());
         for (int i=0; i<NUMFUNK; i++) {
@@ -33,7 +28,7 @@ void Funkeln::loop(unsigned int &counter) {
             colors[i] = mix(random(10001)/10000.0);
             //Serial.printf("colors[%d]=%06x\n",i,colors[i]);
             count[i] = 0;
-            len[i] = (70+random(60))*(params.speed+20)/120.0;
+            len[i] = (70+random(60))*((255-params.speed)+20)/120.0;
         }
     } else {
         for (int i=0; i<NUMFUNK; i++) {
@@ -50,7 +45,7 @@ void Funkeln::loop(unsigned int &counter) {
                 pos[i] = random(NUMPIXEL);
                 colors[i] = mix(random(10001)/10000.0);
                 count[i] = 0;
-                len[i] = (70+random(60))*(params.speed+20)/120.0;       
+                len[i] = (70+random(60))*((255-params.speed)+20)/120.0;       
             }
         }
     }

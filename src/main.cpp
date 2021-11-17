@@ -29,24 +29,23 @@ void setup(){
 }
 
 
-unsigned int counter = 0; 
 unsigned long nextStep = millis();
+bool fastLoop = false;
 
 void loop() {
     ArduinoOTA.handle();
     // init
     if (params.newProgram!=params.activeProgram) {
         params.activeProgram = params.newProgram;
+        fastLoop = (params.activeProgram>=0 && params.apps[params.activeProgram]->loopFast());
         nextStep = millis();
-        counter = 0;
         params.pixels->clear();
         params.pixels->show();
     }
-    if (millis()>nextStep) {
-        nextStep += 40;  // 25fps;
+    if (millis()>nextStep || fastLoop) {
+        nextStep = millis()+40;  // 25fps;
         if (params.activeProgram>=0) {
-            params.apps[params.activeProgram]->loop(counter);
+            params.apps[params.activeProgram]->loop();
         }
     }
-    counter++;
 }

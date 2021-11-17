@@ -1,16 +1,18 @@
 #include "../app.h"
 #include "../params.h"
+#include "../utils.h"
 
 class RainSphere : App {
     public:
-    virtual void loop(unsigned int &counter);
+    virtual void loop();
     virtual const char* buttonName() { return "RainSphere"; }
 };
 
 
-void RainSphere::loop(unsigned int &counter) {
+void RainSphere::loop() {
     float zero[3] {0,0,100};
-    if (counter>=100) counter = 0;
+    float t = fmod(secs()/fmap(params.speed, 0, 255, 20, 1.0),1.0);
+
     for (int i=0; i<NUMPIXEL; i++) {  
         float l=0;
         for (int k=0; k<3; k++) {
@@ -18,7 +20,7 @@ void RainSphere::loop(unsigned int &counter) {
             l+=d*d;
         }
         l = sqrt(l);
-        int hue = (l/100.0+1-counter*0.01)*0xffff;
+        int hue = fmod(l/100.0+(1-t),1.0)*0xffff;
         hue %= 0xffff;
         params.pixels->setPixelColor(i, params.pixels->ColorHSV(hue));
     }
