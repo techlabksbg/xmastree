@@ -6,7 +6,7 @@
 #include "app.h"
 
 #define PIN 13
-#define NUMPIXEL 200
+#define NUMPIXEL 500
 
 
 

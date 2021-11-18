@@ -4,7 +4,7 @@ from time import sleep
 import numpy as np
 from datetime import datetime
 
-NUMLEDS = 200
+NUMLEDS = 500
 
 # Measures in cm
 # campos = np.mat([[230,50,90]]).transpose()
