@@ -165,9 +165,9 @@ void WebServer::setupHTTP() {
         status += " all clear.";
       }
       params.pixels->show();
-      if (params.activeProgram!=4) {
-        params.newProgram = 4;
-        params.activeProgram = 4;
+      if (params.activeProgram!=-1) {
+        params.newProgram = -1;
+        params.activeProgram = -1;
       }
     } else {
       status += "missing parameter 'led'";
