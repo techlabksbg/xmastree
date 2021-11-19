@@ -21,6 +21,8 @@ struct Params {
     float posdata[NUMPIXEL][3];
     std::vector<App*> apps;
     Adafruit_NeoPixel* pixels;
+    std::vector<float> mins = std::vector<float> (3, 500);
+    std::vector<float> maxs = std::vector<float> (3, -500);
 
     void readPosData() {
         File f = SPIFFS.open("/posdata.txt", FILE_READ);
@@ -28,6 +30,13 @@ struct Params {
             for (int i=0; i<NUMPIXEL; i++) {
                 for (int k=0; k<3; k++) {
                     posdata[i][k] = f.parseFloat();
+                    if (posdata[i][k] > maxs[k]){
+                        maxs[k] = posdata[i][k];
+                    }
+                    if (posdata[i][k] < mins[k]){
+                        mins[k] = posdata[i][k];
+                    }
+                    
                 }
             }
             f.close();

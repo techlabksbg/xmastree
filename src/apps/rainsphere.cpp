@@ -6,11 +6,17 @@ class RainSphere : App {
     public:
     virtual void loop();
     virtual const char* buttonName() { return "RainSphere"; }
+    float zero[3] {0,0,100};
+    int dir = 1;
 };
 
 
 void RainSphere::loop() {
-    float zero[3] {0,0,100};
+    zero[2] += (float)dir * params.speed / 1000;
+    if ((dir == 1 && zero[2] > params.maxs[2] )||(dir == -1 && zero[2] < params.mins[2])){
+        dir *= -1;
+        
+    }
     float t = fmod(secs()/fmap(params.speed, 0, 255, 20, 1.0),1.0);
 
     for (int i=0; i<NUMPIXEL; i++) {  
