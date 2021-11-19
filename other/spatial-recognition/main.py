@@ -10,8 +10,9 @@ NUMLEDS = 500
 # campos = np.mat([[230,50,90]]).transpose()
 #campos = np.mat([[146,210,118]]).transpose() # Auf tisch
 # campos = np.mat([[-40,250,87]]).transpose() # Hinter balken
-campos = np.mat([[240, 95,87]]).transpose()
-
+# campos = np.mat([[165, 197,118]]).transpose()
+# campos = np.mat([[227,93,86]]).transpose()
+campos = np.mat([[-39,221,85]]).transpose() # Hinter balken
 
 
 # Matrix to get space coordinates
@@ -20,14 +21,14 @@ v = v/np.linalg.norm(v)
 S = np.mat([[-v[1,0],v[0,0],0], [0,0,1], [0,0,0]]).transpose()
 
 
-baumpoly = np.mat(((0,0), (70,30), (0,210), (-70,30))).transpose()
+baumpoly = np.mat(((0,0), (80,30), (0,215), (-80,30))).transpose()
 baumpoly = np.vstack([baumpoly, np.ones(4)])
 
 print("baumpoly")
 print(baumpoly)
 
 def setLed(nr):
-    conn = http.client.HTTPConnection("192.168.1.75",80)
+    conn = http.client.HTTPConnection("192.168.42.1",80)
     conn.request("GET", "/setled?led=%d"%nr)
     r = conn.getresponse()
     data = r.read()
@@ -51,6 +52,19 @@ def click(event, x, y, flags, param):
         print("unitPoint: %d, %d" % (x,y))
         unitPoints.append(np.mat([x,y,1]).transpose())
 
+def getHelp():
+    global unitPoints
+    print("Sag mir wo die LED ist, wo ist sie geblieben?")
+    unitPoints = []
+    cv.setMouseCallback('diff',click)
+    while len(unitPoints)<1:
+        k = cv.waitKey(20) & 0xFF
+        if k == 27:
+            exit()
+    
+    wo = S*F*unitPoints[0]
+    print("Human says ", wo)
+    return wo,1.0
 
 
 def getPoints(img):
@@ -102,7 +116,7 @@ def getPoints(img):
     return mask
 
 
-def getLedPos(nr, frameoff, prev=None, succ=None):
+def getLedPos(nr, frameoff, prev=None, prevc=0.0, succ=None, succc=0.0):
     setLed(nr)
     # Capture the video frame
     # by frame
@@ -120,24 +134,26 @@ def getLedPos(nr, frameoff, prev=None, succ=None):
     wo = S*F*(np.mat(wo+(1,)).transpose())
 
     esty = (25-abs(nr%50-25))/25*150+30
-    confidence = 1.0-abs(wo[2,0]-esty)/40.0
+    estymin = 10
+    estymax = (25-abs(nr%50-25))/25*140+60
+    confidence = 1.0
+    if (wo[2,0]<estymin or wo[2,0]>estymax):
+        confidence=0.5
     dist = 0 
     if confidence<0.0:
         confidence = 0.0
     if not isinstance(succ, type(None)):
         dist = np.linalg.norm(succ-wo)
-        if dist>20:
+        if succc>0 and dist>20/succc:
             print("Oops! Dist to succ is %.1f>20" % dist)
             confidence *= 1-(dist-20)/20;
     if not isinstance(prev, type(None)):
         dist = np.linalg.norm(prev-wo)
-        if dist>20:
+        if prevc>0 and dist>20/prevc:
             print("Oops! Dist to prev is =%.1f>20" % dist)
             confidence *= 1-(dist-20)/20;
     if confidence<0:
         confidence = 0.0
-    if abs(wo[2,0]-esty)>40:
-        print("Oops!  esty=%f, wo.z=%f" % (esty, wo[2,0]))
     print("%.1f, %.1f, %.1f     esty=%.1f, dist=%.1f    c=%.3f" % (wo[0,0], wo[1,0], wo[2,0], esty, dist, confidence))
     return wo,confidence
 
@@ -217,21 +233,26 @@ sleep(1)
 wo = None
 ledPos = [[] for i in range(NUMLEDS)]
 confidence = [[] for i in range(NUMLEDS)]
-
+tries = [0 for i in range(NUMLEDS)]
 
 limitconf = 0.8
-nr = 0
 ledsok = 0
+nr = 0
 while ledsok<NUMLEDS:
     if (len(ledPos[nr])==0 or max(confidence[nr])<limitconf):
         print("Locating LED %d" % nr)
         prev = None
         succ = None
+        prevc = 0.0
+        succc = 0.0
         if (nr>0):
-            prev,c = weightedMedian(ledPos[nr-1], confidence[nr-1])
+            prev,prevc = weightedMedian(ledPos[nr-1], confidence[nr-1])
         if (nr<NUMLEDS-1):
-            succ,c = weightedMedian(ledPos[nr+1], confidence[nr+1])
-        wo,c = getLedPos(nr, frameoff, prev, succ)
+            succ,succc = weightedMedian(ledPos[nr+1], confidence[nr+1])
+        wo,c = getLedPos(nr, frameoff, prev, prevc, succ, succc)
+        tries[nr]+=1
+        if (tries[nr]>5):
+            wo,c = getHelp()
         if (c>0.3): # Do not even store too bad a reading
             ledPos[nr].append(wo) 
             confidence[nr].append(c)
