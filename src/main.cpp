@@ -33,7 +33,7 @@ unsigned long nextStep = millis();
 bool fastLoop = false;
 
 void loop() {
-    ArduinoOTA.handle();
+    webserver->loop();    
     // init
     if (params.newProgram!=params.activeProgram) {
         params.activeProgram = params.newProgram;

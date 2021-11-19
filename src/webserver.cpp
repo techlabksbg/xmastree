@@ -4,6 +4,8 @@
 #include "WiFi.h"
 
 #include <ESPmDNS.h>
+#include <DNSServer.h>
+
 
 // OTA
 #include <WiFiUdp.h>
@@ -15,6 +17,7 @@
 *********/
 
 const char* hostname = "xmastree";  
+
 
 WebServer::WebServer() {}
 
@@ -37,8 +40,17 @@ void WebServer::setupWiFi(bool ap) {
     } else {  // Make accessPoint
         WiFi.softAPConfig({192,168,42,1}, {192,168,42,1}, {255,255,255,0});
         WiFi.softAP("passwort_xmastree", "xmastree");
+        delay(500);
         Serial.println(WiFi.softAPIP());
     }
+}
+
+void WebServer::setupDNS() {
+  dnsServer  = new DNSServer();
+  // according to https://stackoverflow.com/questions/54583818/esp-auto-login-accept-message-by-os-with-redirect-to-page-like-public-wifi-port
+  dnsServer->setErrorReplyCode(DNSReplyCode::NoError);
+  dnsServer->start(53, "*", WiFi.softAPIP());
+
 }
 
 void WebServer::setupOTA() {
@@ -84,6 +96,7 @@ void WebServer::setupMDNS() {
         // nicht sicher, ob die folgende Zeile nötig ist, macht aber Sinn...
         // mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0);
         MDNS.addService("_http", "_tcp", 80);
+        MDNS.addService("_dns", "_udp", 53);
     }
 }
 
@@ -132,7 +145,13 @@ void WebServer::setupHTTP() {
     server = new AsyncWebServer(80);
   // Route for root / web page
   server->on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(SPIFFS, "/index.html", String(), false, processor);
+    /*if (request->host() != (String(hostname) + ".local") && request->host() != String(hostname)  && request->host()!= String("192.168.1.42")) {
+      Serial.println("Request redirected to captive portal");
+      request->addInterestingHeader(String("Location: http://192.168.42.1"));
+      request->send(302,"text/plain", "");
+    } else { */
+      request->send(SPIFFS, "/index.html", String(), false, processor);
+    //}
   });
   
   // Route to load style.css file
@@ -249,5 +268,10 @@ void WebServer::begin(bool accessPoint) {
     setupOTA();
     setupHTTP();
     setupMDNS();
+    setupDNS();
+  }
 
-}
+  void WebServer::loop() {
+    dnsServer->processNextRequest();
+    ArduinoOTA.handle();
+  }
