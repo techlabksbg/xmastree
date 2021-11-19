@@ -13,13 +13,14 @@ class ValueBitmap : App {
 
 void ValueBitmap::loop() {
     static File bitmap;
+    static const char*files[] ={"/values.bin", "/ksbg.bin"};
+    static int active = 0;
     static char values[NUMPIXEL];
     static unsigned int nextFrame = 0;
     if (millis()>nextFrame) {
         nextFrame = millis()+fmap(params.speed, 0, 255, 200, 4);
         if (!bitmap) {
-            bitmap = SPIFFS.open("/values.bin");
-            Serial.println("values.bin opened");
+            bitmap = SPIFFS.open(files[active]);
         }
         bitmap.readBytes(values, NUMPIXEL);
         for (int i=0; i<NUMPIXEL; i++) {
@@ -28,6 +29,7 @@ void ValueBitmap::loop() {
         params.pixels->show();
         if (! bitmap.available()) {
             bitmap.close();
+            active = (active+1)%2;
         }
     }
 }
