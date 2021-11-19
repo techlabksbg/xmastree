@@ -145,13 +145,11 @@ void WebServer::setupHTTP() {
     server = new AsyncWebServer(80);
   // Route for root / web page
   server->on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    /*if (request->host() != (String(hostname) + ".local") && request->host() != String(hostname)  && request->host()!= String("192.168.1.42")) {
-      Serial.println("Request redirected to captive portal");
-      request->addInterestingHeader(String("Location: http://192.168.42.1"));
-      request->send(302,"text/plain", "");
-    } else { */
+    if (request->host() != (String(hostname) + ".local") && request->host() != String(hostname)  && request->host()!= String("192.168.42.1")) {
+      request->redirect("http://192.168.42.1");
+    } else { 
       request->send(SPIFFS, "/index.html", String(), false, processor);
-    //}
+    }
   });
   
   // Route to load style.css file
