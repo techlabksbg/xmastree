@@ -189,11 +189,16 @@ void WebServer::setupHTTP() {
     } else {
       status += "missing parameter 'led'";
     }
+    params.lastCmd = millis();
+    params.isAutoRunning = false;
     request->send(200, "text/plain", status);
   });
 
   // Route to set Programms
   server->on("/prg", HTTP_GET, [](AsyncWebServerRequest *request){
+    params.lastCmd = millis();
+    params.isAutoRunning = false;
+
     String status = String("Status: ");
     if(request->hasParam("brightness")) {
       int b = atoi(request->getParam("brightness")->value().c_str());

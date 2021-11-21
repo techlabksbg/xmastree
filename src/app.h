@@ -19,6 +19,7 @@ class App {
     App();
     virtual const char* buttonName(){return "App";}
     virtual bool loopFast() { return false; }
+    virtual bool setGoodParams() { return false; }
     virtual void loop() {}
     float secs();
 private:
