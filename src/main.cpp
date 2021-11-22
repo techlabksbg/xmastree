@@ -20,6 +20,12 @@ void setup(){
       return;
     }
 
+    // Initialize SD Card
+    pinMode(SD_CS, OUTPUT);      
+    digitalWrite(SD_CS, HIGH);
+    SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);  // See param.h for pin definition
+    SD.begin(SD_CS);
+
     // Read LED-Positions
     params.readPosData();
 
