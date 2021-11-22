@@ -88,6 +88,7 @@ float* vec_rotxy(float *dst, float *src, float w) {
     dst[0] = c*src[0]-s*src[1];
     dst[1] = s*src[0]+c*src[1];
   }
+  return dst;
 }
 
 /**

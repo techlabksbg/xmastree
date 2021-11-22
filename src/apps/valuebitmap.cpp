@@ -8,8 +8,14 @@ class ValueBitmap : App {
     virtual void loop();
     virtual const char* buttonName() { return "Tech-Lab"; }
     virtual bool loopFast() { return true; }
+    virtual bool setGoodParams();
+
 };
 
+bool ValueBitmap::setGoodParams() {
+    params.speed = 200;
+    return true;
+}
 
 void ValueBitmap::loop() {
     static File bitmap;

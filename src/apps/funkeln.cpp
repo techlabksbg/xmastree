@@ -8,8 +8,27 @@ class Funkeln : App {
     public:
     virtual void loop();
     virtual const char* buttonName() { return "Funkeln"; }
+    virtual bool setGoodParams();
 };
 
+bool Funkeln::setGoodParams() {
+    static int p = 0;
+    switch (p) {
+    case 0:
+        params.color1 = 0x1111ff;
+        params.color2 = 0xff2266;
+        params.speed = 100;
+        break;
+    case 1:
+        params.color1 = 0xff0000;
+        params.color2 = 0x00ff00;
+        params.speed = 200;
+        break;
+
+    }
+    p = (p+1)%2;
+    return true;
+}
 
 void Funkeln::loop() {
     static int pos[NUMFUNK];
