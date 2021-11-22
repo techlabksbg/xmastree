@@ -21,8 +21,32 @@ const char* hostname = "xmastree";
 
 WebServer::WebServer() {}
 
+bool ntpDone = false;
+
+void getTimeFromNTP() {
+  WiFi.mode(WIFI_STA);
+  WiFi.begin("St.Galler Wireless", "");
+  int i = 0;
+  while (i<100 && WiFi.status()!= WL_CONNECTED) {
+    sleep(100);
+    i++;
+  }
+  if (WiFi.status()== WL_CONNECTED) {
+    sntp_set_time_sync_notification_cb([](timeval *tv) {
+        ntpDone = true;
+    });
+    configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");
+    i = 0;
+    while (i<10 && !ntpDone) {
+      sleep(100);
+      i++;
+    }
+  }
+  WiFi.disconnect();
+}
+
 void WebServer::setupWiFi(bool ap) {
-    if (!ap) {
+    if (!ap) { // connect to TEch-Lab network
         WiFi.mode(WIFI_STA);
         Serial.println(WiFi.macAddress());
         WiFi.begin("tech-lab", "tech-lab");
@@ -37,7 +61,12 @@ void WebServer::setupWiFi(bool ap) {
         }
         // Print ESP32 Local IP Address
         Serial.println(WiFi.localIP());
+        // Daylightsaving time included
+        configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");
     } else {  // Make accessPoint
+        // Get time first
+        getTimeFromNTP();
+        // make AP
         WiFi.softAPConfig({192,168,42,1}, {192,168,42,1}, {255,255,255,0});
         WiFi.softAP("passwort_xmastree", "xmastree");
         delay(500);
