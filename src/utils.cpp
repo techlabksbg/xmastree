@@ -49,9 +49,16 @@ float* vec_add(float *dst, float *src) {
   return dst;
 }
 
-float* vec_add_null(float *dst, float *src, float mul) {
+float* vec_add_mull(float *dst, float *src, float mul) {
    for (int i=0; i<3; i++) {
     dst[i]+= src[i]*mul;
+  }
+  return dst;
+}
+
+float* vec_mul(float* dst, float mul) {
+  for (int i=0; i<3; i++) {
+    dst[i] *= mul;
   }
   return dst;
 }
@@ -68,12 +75,28 @@ float vec_norm(float *src) {
   return sqrt(vec_norm2(src));
 }
 
+float vec_dist2(float* a, float* b) {
+  float l = 0.0;
+  for (int i=0; i<3; i++) {
+    l+=(a[i]-b[i])*(a[i]-b[i]);
+  }
+  return l;
+}
+
+float vec_dist(float* a, float* b) {
+  return sqrt(vec_dist2(a,b));
+}
+
 float vec_dot(float *src1, float *src2) {
   float d = 0.0;
   for (int i=0; i<3; i++) {
     d+=src1[i]*src2[i];
   }
   return d;
+}
+
+float* vec_normalize(float* vec) {
+  return vec_mul(vec, 1.0/vec_norm(vec));
 }
 
 
@@ -103,4 +126,26 @@ float* vec_cross(float* dst, float* src1, float* src2) {
   dst[1] = src1[2]*src2[0]-src1[0]*src2[2];
   dst[2] = src1[0]*src2[1]-src1[1]*src1[0];
   return dst;  
+}
+
+float line_project(float* pt, float* linea, float* lineb) {
+  float v[3];
+  // pt2-pt1 
+  vec_add_mull(vec_copy(v, lineb), linea, -1);
+  // (v*pt-v*a)/(v*v)
+  return (vec_dot(v,pt)-vec_dot(v,linea))/vec_norm2(v);
+}
+
+float dist_to_segment(float* pt, float* sega, float* segb) {
+  float t = line_project(pt, sega, segb);
+  if (t<0.0) {
+    return vec_dist(pt, sega);
+  } else if (t>1.0) {
+    return vec_dist(pt, segb);
+  }
+  float v[3];
+  // v = a*(1-t)+b*t
+  vec_mul(vec_copy(v,segb),t);
+  vec_add_mull(v, sega, 1.0-t);
+  return vec_dist(v,pt);
 }
