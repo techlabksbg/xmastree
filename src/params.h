@@ -4,9 +4,16 @@
 #include <Adafruit_NeoPixel.h>
 #include "SPIFFS.h"
 #include "app.h"
+#include "SD.h"
 
 #define PIN 13
 #define NUMPIXEL 500
+
+// Pins for SD-Card
+#define SD_CS          5
+#define SPI_MOSI      23
+#define SPI_MISO      19
+#define SPI_SCK       18
 
 
 
@@ -44,6 +51,8 @@ struct Params {
             f.close();
         }
     }
+
+    
 };
 
 
