@@ -26,22 +26,31 @@ bool ntpDone = false;
 void getTimeFromNTP() {
   WiFi.mode(WIFI_STA);
   WiFi.begin("St.Galler Wireless", "");
+  Serial.println("Trying St.Galler Wireless");
   int i = 0;
-  while (i<100 && WiFi.status()!= WL_CONNECTED) {
-    sleep(100);
+  while (i<50 && (WiFi.status()!= WL_CONNECTED)) {
+    delay(100);
     i++;
+    Serial.print('.');
   }
+  Serial.println("Done trying");
   if (WiFi.status()== WL_CONNECTED) {
+    Serial.println("Syncing time with NTP");
     sntp_set_time_sync_notification_cb([](timeval *tv) {
         ntpDone = true;
     });
     configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");
     i = 0;
     while (i<10 && !ntpDone) {
-      sleep(100);
+      delay(100);
       i++;
+      Serial.print('.');
     }
+    Serial.println();
+  } else {
+    Serial.println("St.Galler Wireless not found");
   }
+  Serial.println("WiFi disconnect");
   WiFi.disconnect();
 }
 
@@ -65,7 +74,7 @@ void WebServer::setupWiFi(bool ap) {
         configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");
     } else {  // Make accessPoint
         // Get time first
-        getTimeFromNTP();
+        //getTimeFromNTP();
         // make AP
         WiFi.softAPConfig({192,168,42,1}, {192,168,42,1}, {255,255,255,0});
         WiFi.softAP("passwort_xmastree", "xmastree");
