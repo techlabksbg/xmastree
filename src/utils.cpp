@@ -114,6 +114,36 @@ float* vec_rotxy(float *dst, float *src, float w) {
   return dst;
 }
 
+float* vec_rotyz(float *dst, float *src, float w) {
+  float c = cos(w);
+  float s = sin(w);
+  if (dst==src) {
+    float x = c*src[1]-s*src[2];
+    dst[2] = s*src[1]+c*src[2];
+    dst[1] = x;
+  } else {
+    dst[1] = c*src[1]-s*src[2];
+    dst[2] = s*src[1]+c*src[2];
+  }
+  return dst;
+}
+
+float* vec_rotzx(float *dst, float *src, float w) {
+  float c = cos(w);
+  float s = sin(w);
+  if (dst==src) {
+    float x = c*src[2]-s*src[0];
+    dst[0] = s*src[2]+c*src[0];
+    dst[2] = x;
+  } else {
+    dst[2] = c*src[2]-s*src[0];
+    dst[0] = s*src[2]+c*src[0];
+  }
+  return dst;
+}
+
+
+
 /**
  * Cross product. Destination must be different from src1 and src2
  * @param src1 1st vector

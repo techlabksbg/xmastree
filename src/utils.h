@@ -126,6 +126,8 @@ float vec_dot(float *src1, float *src2);
  * @return float* dst (resulting vector)
  */
 float* vec_rotxy(float *dst, float *src, float w);
+float* vec_rotyz(float *dst, float *src, float w);
+float* vec_rotzx(float *dst, float *src, float w);
 
 /**
  * @brief cross product. 
