@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "functional": "cpp"
+        "functional": "cpp",
+        "new": "cpp",
+        "cmath": "cpp"
     }
 }
