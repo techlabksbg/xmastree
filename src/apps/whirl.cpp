@@ -7,8 +7,29 @@ class Whirl : App {
     public:
     virtual void loop();
     virtual const char* buttonName() { return "Whirl"; }
+    virtual bool setGoodParams();
+
 };
 
+bool Whirl::setGoodParams() {
+    static int p = 0;
+    params.brightness = 255;
+    switch (p) {
+    case 0:
+        params.speed = 255;
+        params.color1 = 0xff0000;
+        params.color2 = 0x0000ff;
+        break;
+    case 1:
+        params.color1 = 0xffff00;
+        params.color2 = 0x0000ff;
+        params.speed = 200;
+        break;
+
+    }
+    p = (p+1)%2;
+    return true;
+}
 
 void Whirl::loop() {
     float t = fmod(secs()/fmap(params.speed, 0, 255, 40, 2.0),1.0);
