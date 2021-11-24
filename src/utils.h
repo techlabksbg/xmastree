@@ -158,3 +158,5 @@ float line_project(float* pt, float* linea, float* lineb);
  * @return float Distance to the segment
  */
 float dist_to_segment(float* pt, float* sega, float* segb);
+
+void vec_print(float *v);
