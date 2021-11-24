@@ -110,6 +110,7 @@ float* vec_rotxy(float *dst, float *src, float w) {
   } else {
     dst[0] = c*src[0]-s*src[1];
     dst[1] = s*src[0]+c*src[1];
+    dst[2] = src[2];
   }
   return dst;
 }
@@ -124,6 +125,7 @@ float* vec_rotyz(float *dst, float *src, float w) {
   } else {
     dst[1] = c*src[1]-s*src[2];
     dst[2] = s*src[1]+c*src[2];
+    dst[0] = src[0];
   }
   return dst;
 }
@@ -138,6 +140,7 @@ float* vec_rotzx(float *dst, float *src, float w) {
   } else {
     dst[2] = c*src[2]-s*src[0];
     dst[0] = s*src[2]+c*src[0];
+    dst[1] = src[1];
   }
   return dst;
 }
@@ -164,6 +167,10 @@ float line_project(float* pt, float* linea, float* lineb) {
   vec_add_mull(vec_copy(v, lineb), linea, -1);
   // (v*pt-v*a)/(v*v)
   return (vec_dot(v,pt)-vec_dot(v,linea))/vec_norm2(v);
+}
+
+void vec_print(float *v) {
+  Serial.printf("<%.2f, %.2f, %.2f>", v[0], v[1], v[2]);
 }
 
 float dist_to_segment(float* pt, float* sega, float* segb) {
