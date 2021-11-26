@@ -27,7 +27,7 @@ class VideoPlayer : App {
 // from https://randomnerdtutorials.com/esp32-microsd-card-arduino/
 void VideoPlayer::getFileNames() {
     filesRead = true;
-    File vids = SD.open("vids");
+    File vids = SD.open("/vids");
     if (!vids || !vids.isDirectory()) return;
     File file = vids.openNextFile();
     while (file) {
@@ -61,6 +61,7 @@ void VideoPlayer::loop() {
     if (!filesRead) {
         getFileNames();
     }
+    if (fileNames.capacity()==0) return;
     if (millis()>nextFrame) {
         nextFrame = millis()+fmap(params.speed, 0, 255, 200, 4);
         if (!bitmap) {
