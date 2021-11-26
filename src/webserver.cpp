@@ -182,8 +182,9 @@ void WebServer::setupHTTP() {
     // Create AsyncWebServer object on port 80
     server = new AsyncWebServer(80);
   // Route for root / web page
-  server->on("/", HTTP_GET, [](AsyncWebServerRequest *request){
-    if (request->host() != (String(hostname) + ".local") && request->host() != String(hostname)  && request->host()!= String("192.168.42.1")) {
+  bool makeRedirect = isAp;
+  server->on("/", HTTP_GET, [makeRedirect](AsyncWebServerRequest *request){
+    if (makeRedirect && request->host() != (String(hostname) + ".local") && request->host() != String(hostname)  && request->host()!= String("192.168.42.1")) {
       request->redirect("http://192.168.42.1");
     } else { 
       request->send(SPIFFS, "/index.html", String(), false, processor);
@@ -305,6 +306,7 @@ void WebServer::setupHTTP() {
 }
 
 void WebServer::begin(bool accessPoint) {
+    isAp = accessPoint;
     setupWiFi(accessPoint);
     setupOTA();
     setupHTTP();

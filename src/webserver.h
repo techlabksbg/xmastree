@@ -22,5 +22,6 @@ private:
 
     AsyncWebServer* server;
     DNSServer * dnsServer;
+    bool isAp = true;
 
 };
