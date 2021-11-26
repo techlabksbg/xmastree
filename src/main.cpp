@@ -32,7 +32,7 @@ void setup(){
 
     // Setup WebServer:
     webserver = new WebServer();
-    webserver->begin(true); // true = make ap, false = connect to tech-lab
+    webserver->begin(false); // true = make ap, false = connect to tech-lab
 }
 
 
