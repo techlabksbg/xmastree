@@ -28,7 +28,8 @@ print("baumpoly")
 print(baumpoly)
 
 def setLed(nr):
-    conn = http.client.HTTPConnection("192.168.42.1",80)
+#    conn = http.client.HTTPConnection("192.168.42.1",80)
+    conn = http.client.HTTPConnection("192.168.1.75",80)
     conn.request("GET", "/setled?led=%d"%nr)
     r = conn.getresponse()
     data = r.read()
@@ -169,6 +170,8 @@ def findCam():
     for i in range(5):
         cap = cv.VideoCapture(i)
         if cap.read()[0]:
+            cap.set(cv.CAP_PROP_FRAME_WIDTH, 10000)
+            cap.set(cv.CAP_PROP_FRAME_HEIGHT, 10000)
             cams.append(i)
             print(i)
             print("Index %i -> %s", (i,cap.getBackendName()))
@@ -218,11 +221,20 @@ setLed(9999)
 sleep(1)
 
 cv.namedWindow(winname='diff')
-findCam()
+allcams = findCam()
 
-vid = cv.VideoCapture(max(findCam()))
+vid = cv.VideoCapture(min(allcams))
 if not vid.isOpened():
     raise IOError("Cannot open webcam")
+
+vid.set(cv.CAP_PROP_FRAME_WIDTH, 10000)
+vid.set(cv.CAP_PROP_FRAME_HEIGHT, 10000)
+#vid.set(cv.CAP_PROP_FRAME_WIDTH, 1280)
+#vid.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
+width = int(vid.get(cv.CAP_PROP_FRAME_WIDTH))
+height = int(vid.get(cv.CAP_PROP_FRAME_HEIGHT))
+
+print(width,height)
 
 frameoff = getOffFrame()
 

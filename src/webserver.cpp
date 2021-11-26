@@ -201,6 +201,11 @@ void WebServer::setupHTTP() {
     request->send(SPIFFS, "/hsv400.png", "image/png");
   });
 
+  // Route to load techlab.png file
+  server->on("/techlab.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/techlab.png", "image/png");
+  });
+
   // Route to load favicon.ico file
   server->on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/favicon.ico", "image/x-icon");

@@ -8,8 +8,15 @@ class RainSphere : App {
     virtual const char* buttonName() { return "RainSphere"; }
     float zero[3] {0,0,100};
     int dir = 1;
+    virtual bool setGoodParams();
+
 };
 
+bool RainSphere::setGoodParams() {
+    params.speed = 170;
+    params.brightness = 127;
+    return true;
+}
 
 void RainSphere::loop() {
     zero[2] += (float)dir * params.speed / 1000;

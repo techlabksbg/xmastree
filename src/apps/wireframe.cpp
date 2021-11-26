@@ -29,8 +29,8 @@ void WireFrame::loop() {
     float t = secs()/fmap(params.speed, 0, 255, 20, 1.0);
     float wxy = t/3;
     float wzx = t;
-    uint16_t hue = fmod(t,10)*6553;
-    float* trans = new float[3] {0.0f, 0.0f, 70.0f};
+    
+    float* trans = new float[3] {0.0f, 0.0f, 90.0f};
 
 
     /*float* test = new float[3] {8.0f, 3.0f, 7.0f};
@@ -46,7 +46,7 @@ void WireFrame::loop() {
         vec_copy(v[i], tetra[i]);
         vec_rotzx(v[i], tetra[i], wzx);
         vec_rotxy(v[i], v[i], wxy);
-        vec_mul(v[i],80.0/2); // 80cm cube
+        vec_mul(v[i],50.0/2); // 80cm cube
         vec_add(v[i], trans);
         //vec_print(v[i]);
     }
@@ -60,7 +60,9 @@ void WireFrame::loop() {
             bits=0;
         }*/
         float d = 1000.0;
+        int best = -1;
         //Serial.print("dists = ");
+        int n = 0;
         for (int p1=0; p1<4; p1++) {
             for (int p2=p1+1; p2<4; p2++) {
                 float l = dist_to_segment(params.posdata[led], v[p1], v[p2]);
@@ -68,14 +70,19 @@ void WireFrame::loop() {
                     Serial.print(l);
                     Serial.print(',');
                 }*/
-                if (l<d) d=l;
+                if (l<d) {
+                    d=l;
+                    best = n;
+                }
+                n++;
             }
         }
-        // 10cm tubes
-        if (d<15.0) {
+        uint16_t hue = fmod(best/6.0,1.0)*0xffff;
+        // 8cm tubes
+        if (d<10.0) {
             uint8_t v = 255;
-            if (t>10.0) {
-                v = (15-d)*51;
+            if (t>6.0) {
+                v = (10-d)*63;
             }
             params.pixels->setPixelColor(led, params.pixels->ColorHSV(hue, 255, v));
         } else {
@@ -87,6 +94,7 @@ void WireFrame::loop() {
         }*/
     }
     //Serial.printf("0x%llx],\\\n",bits);
+    params.pixels->show();
 }
 
 
