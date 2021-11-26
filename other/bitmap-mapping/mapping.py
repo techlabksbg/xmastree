@@ -63,11 +63,13 @@ out = open("values.py", "w")
 out.write("values = [\\\n")
 b = b''
 binfile = open("values.bin", "w")
-for xoff in range(0,int(w-propw)):
+xoff = 0.0
+while (xoff < w-propw):
     out.write("  ")
     out.write(str([round(img[int(bpl[i][1])][int(bpl[i][0]+xoff)]/255.0,3) for i in range(numleds)]))
     out.write(",\\\n")
     b+= bytes([img[int(bpl[i][1])][int(bpl[i][0]+xoff)] for i in range(numleds)])
+    xoff+=1
 
 out.write("]\n")
 out.close()
