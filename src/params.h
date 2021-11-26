@@ -27,6 +27,7 @@ struct Params {
     unsigned long lastCmd = 0;
     uint32_t color1 = 0xff0000;
     uint32_t color2 = 0x0000ff;
+    String text = "TECHLAB";
     float posdata[NUMPIXEL][3];
     std::vector<App*> apps;
     Adafruit_NeoPixel* pixels;

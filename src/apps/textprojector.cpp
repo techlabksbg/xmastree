@@ -185,7 +185,8 @@ void TextProjector::loop(){
         }
     }
 
-    if(secs() < lassec){
+    if(secs() < lassec || towrite != params.text){
+        towrite = params.text;
         updatetext();
         lassec = secs();
     }

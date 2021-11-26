@@ -175,6 +175,9 @@ String processor(const String& var) {
       }
       return res;
   }
+  if (var == "TEXT") {
+    return params.text;
+  }
   return String();
 }
 
@@ -299,6 +302,13 @@ void WebServer::setupHTTP() {
         params.newProgram = p;
         status += " program=";
         status += params.newProgram;
+      }
+    }
+    if (request->hasParam("text")) {
+      if (params.text != request->getParam("text")->value()) {
+        params.text = request->getParam("text")->value();
+        status += "text=";
+        status += params.text;
       }
     }
     request->send(200, "text/plain", status);
