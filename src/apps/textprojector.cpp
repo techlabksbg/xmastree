@@ -13,6 +13,7 @@ class TextProjector : App {
     virtual void loop();
     virtual const char* buttonName() { return "Display Text"; }
     void updatetext();
+    void shiftin();
     bool inited = false;
     vector<float> projectedcoords [NUMPIXEL];
     pair<int, int> finals [NUMPIXEL];
@@ -26,58 +27,91 @@ class TextProjector : App {
     float multpfac;
     String towrite = "ABC";
     bool **on;
-    int width;
     int padding = 30;
+    int width = 100;
+    int botx;
+    int imind;
+    int imheight;
+    File filee;
+    vector<int> indx;
+    vector<int> widths;
 };
+
+void TextProjector::shiftin(){
+    if (botx + width> widths[imind]){
+        Serial.println("newchar");
+        imind += 1;
+        if (imind == indx.size()){
+            Serial.println("done");
+            imind = 0;
+            botx = -300;
+        }
+        String bas = "/letters/";
+        filee = SPIFFS.open(bas + indx[imind] + ".txt", FILE_READ);
+        filee.parseInt();
+        imheight = filee.parseInt();
+    }
+    memmove(on, on + 1, sizeof(bool*)*(width-1));
+    if (botx + width < widths[imind] - padding){
+        for (int yreader = 0; yreader < imheight; yreader++){
+            if (filee){
+                int data = filee.parseInt();
+                on[width - 1][yreader] = false;
+                if (data == 1){
+                    on[width - 1][yreader] = true;
+                }
+            }
+            else{
+                on[width - 1][yreader] = false;
+            }
+        }
+        for (int zeroer = imheight; zeroer < 256; zeroer++){
+            on[width - 1][zeroer] = false;
+        }
+        
+    }
+    else{
+        for (int yreader = 0; yreader < 256; yreader++){
+            on[width - 1][yreader] = false;
+        }
+    }
+    botx++;
+}
 
 void TextProjector::updatetext(){
     vector<char> charcs = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', ':', '.', '-', '_', '+', '*', '"', '\\', '?', '!', '^', '%', '&'};
-    vector<int> indx;
+    indx.clear();
     int len = 0;
-    Serial.println("morge");
     for (int charc = 0; charc < towrite.length(); charc++){
-        Serial.println(charc);
         int ind = 0;
         while (ind < charcs.size() && charcs[ind] != towrite[charc]){
-            Serial.println(ind);
             ind += 1;
         }
         if (charcs[ind] == towrite[charc]){
-            Serial.println(ind);
             String bas = "/letters/";
-            File f = SPIFFS.open(bas + ind + ".txt", FILE_READ);
-            int width = f.parseInt();
+            filee = SPIFFS.open(bas + ind + ".txt", FILE_READ);
+            int width = filee.parseInt();
             len += width + padding;
+            widths.push_back(len);
             indx.push_back(ind);
         }
     }
-    Serial.println(len);
+
     delete on;
-    on = new bool* [len];
-    for (int zeroer = 0; zeroer < len; zeroer++){
+    on = new bool* [width];
+    for (int zeroer = 0; zeroer < width; zeroer++){
         on[zeroer] = new bool [256];
         for (int setter = 0; setter < 256; setter++){
-            on[zeroer][setter] = false;
+            on[zeroer][setter] = false; 
         }
     }
 
-    int botx = 0;
-    for (int reader = 0; reader < indx.size(); reader++){
-        String bas = "/letters/";
-        File f = SPIFFS.open(bas + indx[reader] + ".txt", FILE_READ);
-        int width = f.parseInt();
-        int height = f.parseInt();
-        for (int xreader = 0; xreader < width; xreader++){
-            for (int yreader = 0; yreader < height; yreader++){
-                int data = f.parseInt();
-                on[xreader + botx][yreader] = false;
-                if (data == 1){
-                    on[xreader + botx][yreader] = true;
-                }
-            }
-        }
-        botx += width + padding;
-    }
+    botx = -300;
+    imind = 0;
+    String bas = "/letters/";
+    filee = SPIFFS.open(bas + 0 + ".txt", FILE_READ);
+    filee.parseInt();
+    imheight = filee.parseInt();
 }
 
 void TextProjector::loop(){
@@ -149,9 +183,13 @@ void TextProjector::loop(){
         }
         updatetext();
     }
+    shiftin();
     for (int pixel = 0; pixel < NUMPIXEL; pixel++){
-        if (finals[pixel].second > 0 && finals[pixel].second < 256){
-            params.pixels->setPixelColor(pixel, finals[pixel].first << 8 | finals[pixel].second);
+        params.pixels->setPixelColor(pixel, 0);
+        if (finals[pixel].second > 0 && finals[pixel].second < 256 && finals[pixel].first < width){
+            if (on[finals[pixel].first][finals[pixel].second]){
+                params.pixels->setPixelColor(pixel, 0xFFFFFF);
+            }
         }
     }
     params.pixels->show();
