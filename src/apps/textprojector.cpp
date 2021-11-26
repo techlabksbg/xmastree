@@ -11,27 +11,30 @@ using namespace std;
 class TextProjector : App {
     public:
     virtual void loop();
-    virtual const char* buttonName() { return "Display Text"; }
+    virtual const char* buttonName() { return "Display Text"; };
+    virtual bool loopFast() { return true; };
     void updatetext();
     void shiftin();
-    bool inited = false;
     vector<float> projectedcoords [NUMPIXEL];
     pair<int, int> finals [NUMPIXEL];
-    float projectto [3] = {100, 100, 100};
+    float projectto [3] = {5000, 5000, 180};
     float vectocen [3] = {-projectto[0], -projectto[1], 100 - projectto[2]};
     float xproj [3];
     float yproj [3];
     float dd, dx, dy;
-    float minprop = 0.3;
-    float maxprop = 0.7;
+    float minprop = 0.2;
+    float maxprop = 0.95;
     float multpfac;
-    String towrite = "ABC";
-    bool **on;
+    String towrite = "HALLO";
+    bool *on;
+    bool inited = false;
     int padding = 30;
-    int width = 100;
+    int tonex = 200;
+    int width = 300;
     int botx;
     int imind;
     int imheight;
+    float lassec = 100000;
     File filee;
     vector<int> indx;
     vector<int> widths;
@@ -39,40 +42,38 @@ class TextProjector : App {
 
 void TextProjector::shiftin(){
     if (botx + width> widths[imind]){
-        Serial.println("newchar");
         imind += 1;
         if (imind == indx.size()){
-            Serial.println("done");
             imind = 0;
-            botx = -300;
+            botx = -1*width-tonex;
         }
         String bas = "/letters/";
-        filee = SPIFFS.open(bas + indx[imind] + ".txt", FILE_READ);
+        filee = SD.open(bas + indx[imind] + ".txt", FILE_READ);
         filee.parseInt();
         imheight = filee.parseInt();
     }
-    memmove(on, on + 1, sizeof(bool*)*(width-1));
-    if (botx + width < widths[imind] - padding){
+    memmove(on, on + 256, 256*sizeof(bool)*(width-1));
+    if (botx + width > 0 && botx + width < widths[imind] - padding){
         for (int yreader = 0; yreader < imheight; yreader++){
             if (filee){
                 int data = filee.parseInt();
-                on[width - 1][yreader] = false;
+                on[(width - 1) * 256 + yreader] = false;
                 if (data == 1){
-                    on[width - 1][yreader] = true;
+                    on[(width - 1) * 256 + yreader] = true;
                 }
             }
             else{
-                on[width - 1][yreader] = false;
+                on[(width - 1) * 256 + yreader] = false;
             }
         }
         for (int zeroer = imheight; zeroer < 256; zeroer++){
-            on[width - 1][zeroer] = false;
+            on[(width - 1) * 256 + zeroer] = false;
         }
         
     }
     else{
         for (int yreader = 0; yreader < 256; yreader++){
-            on[width - 1][yreader] = false;
+            on[(width - 1) * 256 + yreader] = false;
         }
     }
     botx++;
@@ -89,34 +90,31 @@ void TextProjector::updatetext(){
         }
         if (charcs[ind] == towrite[charc]){
             String bas = "/letters/";
-            filee = SPIFFS.open(bas + ind + ".txt", FILE_READ);
-            int width = filee.parseInt();
-            len += width + padding;
+            filee = SD.open(bas + ind + ".txt", FILE_READ);
+            int widthy = filee.parseInt();
+            len += widthy + padding;
             widths.push_back(len);
             indx.push_back(ind);
         }
     }
 
     delete on;
-    on = new bool* [width];
-    for (int zeroer = 0; zeroer < width; zeroer++){
-        on[zeroer] = new bool [256];
-        for (int setter = 0; setter < 256; setter++){
-            on[zeroer][setter] = false; 
-        }
+    on = new bool [width*256];
+    for (int zeroer = 0; zeroer < width*256; zeroer++){
+        on[zeroer] = false;
     }
 
-    botx = -300;
+    botx = -1*width;
     imind = 0;
     String bas = "/letters/";
-    filee = SPIFFS.open(bas + 0 + ".txt", FILE_READ);
+    filee = SD.open(bas + indx[0] + ".txt", FILE_READ);
     filee.parseInt();
     imheight = filee.parseInt();
 }
 
 void TextProjector::loop(){
     if (!inited){
-        Serial.println("helloo");
+        inited = true;
         float lto = sqrt(vectocen[0]*vectocen[0] + vectocen[1]*vectocen[1] + vectocen[2]*vectocen[2]);
         vectocen[0] /= lto;
         vectocen[1] /= lto;
@@ -138,7 +136,6 @@ void TextProjector::loop(){
         dd = -projectto[0]*vectocen[0]-projectto[1]*vectocen[1]-projectto[2]*vectocen[2];
         dx = -projectto[0]*xproj[0]-projectto[1]*xproj[1]-projectto[2]*xproj[2];
         dy = -projectto[0]*yproj[0]-projectto[1]*yproj[1]-projectto[2]*yproj[2];
-        inited = true;
         for (int point = 0; point < NUMPIXEL; point++){
             float * ledcoords = params.posdata[point];
             float dst = ledcoords[0]*vectocen[0] + ledcoords[1]*vectocen[1] + ledcoords[2]*vectocen[2] + dd;
@@ -160,17 +157,22 @@ void TextProjector::loop(){
         vector<float> pointer;
         for (int point = 0; point < NUMPIXEL; point++){
             pointer = projectedcoords[point];
-            if (pointer[1] > xmax){
-                xmax = pointer[1];
-            }
-            if (pointer[1] < xmin){
-                xmin = pointer[1];
-            }
             if (pointer[2] > ymax){
                 ymax = pointer[2];
             }
             if (pointer[2] < ymin){
                 ymin = pointer[2];
+            }
+        }
+        for (int point = 0; point < NUMPIXEL; point++){
+            pointer = projectedcoords[point];
+            if (pointer[2] > ymin + minprop*(ymax - ymin) && pointer[2] < ymin + maxprop*(ymax - ymin)){   
+                if (pointer[1] > xmax){
+                    xmax = pointer[1];
+                }
+                if (pointer[1] < xmin){
+                    xmin = pointer[1];
+                }
             }
         }
         multpfac = 256/(maxprop - minprop)/(ymax - ymin);
@@ -181,18 +183,26 @@ void TextProjector::loop(){
                 finals[finaler] = make_pair(x, y); //this line is probably wrong
             }
         }
-        updatetext();
     }
-    shiftin();
-    for (int pixel = 0; pixel < NUMPIXEL; pixel++){
-        params.pixels->setPixelColor(pixel, 0);
-        if (finals[pixel].second > 0 && finals[pixel].second < 256 && finals[pixel].first < width){
-            if (on[finals[pixel].first][finals[pixel].second]){
-                params.pixels->setPixelColor(pixel, 0xFFFFFF);
+
+    if(secs() < lassec){
+        updatetext();
+        lassec = secs();
+    }
+
+    if (secs() > lassec + 0.001){
+        shiftin();
+        for (int pixel = 0; pixel < NUMPIXEL; pixel++){
+            params.pixels->setPixelColor(pixel, 0);
+            if (finals[pixel].second > 0 && finals[pixel].second < 256 && finals[pixel].first < width){
+                if (on[finals[pixel].first*256+finals[pixel].second]){
+                    params.pixels->setPixelColor(pixel, 0xFFFFFF);
+                }
             }
         }
+        params.pixels->show();
+        lassec = secs();
     }
-    params.pixels->show();
 }
 
 TextProjector textProjector;
