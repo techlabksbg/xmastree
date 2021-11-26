@@ -18,12 +18,12 @@
 
 
 struct Params {
-    int activeProgram = 0;
+    int activeProgram = 4;
     int newProgram = 2;
     int numPrograms = 9;
     int brightness = 255;
     int speed = 200;
-    bool isAutoRunning = true;
+    bool isAutoRunning = false;
     unsigned long lastCmd = 0;
     uint32_t color1 = 0xff0000;
     uint32_t color2 = 0x0000ff;
