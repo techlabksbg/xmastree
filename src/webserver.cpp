@@ -73,10 +73,11 @@ void WebServer::setupWiFi(bool ap) {
         // Daylightsaving time included
         configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "pool.ntp.org");
     } else {  // Make accessPoint
+        WiFi.softAPConfig({192,168,42,1}, {192,168,42,1}, {255,255,255,0});
         // Get time first
         getTimeFromNTP();
-        // make AP
         WiFi.softAPConfig({192,168,42,1}, {192,168,42,1}, {255,255,255,0});
+        // make AP
         WiFi.softAP("passwort_xmastree", "xmastree");
         delay(500);
         Serial.println(WiFi.softAPIP());
