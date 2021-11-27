@@ -16,7 +16,7 @@
  * 
 *********/
 
-const char* hostname = "xmastree";  
+const char* hostname = "xmastree";
 
 
 WebServer::WebServer() {}
@@ -354,12 +354,7 @@ void WebServer::setupHTTP() {
             }
             Serial.printf("UploadStart: %s\n", filename.c_str());
         }
-        for (size_t i = 0; i < len; i++) {
-            if (file) {
-                Serial.print((char)data[i]);
-                file.write(data[i]);
-            }
-        }
+        file.write(data, len);
         if (final) {
             if (file) {
                 file.close();
