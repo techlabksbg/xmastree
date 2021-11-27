@@ -328,11 +328,10 @@ void WebServer::setupHTTP() {
             response->print(file.name());
             response->print("\">");
             response->print(file.name());
-            /*
             // TODO: FIXME: correctly url-encode file names.
             response->print("</a> &nbsp; <a href=\"/sdcard/delete?filename=");
             response->print(file.name());
-            response->print("\">delete</a>"); */
+            response->print("\">delete</a>"); 
             response->print("</li>\n");
             Serial.println(file.name());        
             file = root.openNextFile();
@@ -375,16 +374,21 @@ void WebServer::setupHTTP() {
     });
 
 
-    /*
-    server->on("/delete", HTTP_GET, [](AsyncWebServerRequest *request){
+    
+    server->on("/sdcard/delete", HTTP_GET, [](AsyncWebServerRequest *request){
         Serial.println("on /delete");
         if(request->hasParam("filename")) {
             // TODO: FIXME: correctly decode url-encoded file names
             Serial.println(request->getParam("filename")->value());
-            SPIFFS.remove(request->getParam("filename")->value());
+            SD.remove(request->getParam("filename")->value());
         }
         request->redirect("/files/");
-    }); */
+    }); 
+
+
+    server->on("/reboot", HTTP_GET, [](AsyncWebServerRequest *request){
+        ESP.restart();
+    }); 
 
   server->serveStatic("/sdcard/", SD, "/");
   // Start server

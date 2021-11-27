@@ -16,9 +16,10 @@ class VideoPlayer : App {
     virtual void loop();
     virtual const char* buttonName() { return "VideoPlayer"; }
     virtual bool setGoodParams();
+    virtual bool loopFast() { return true; }
 
     void getFileNames();
-    float angle = 0.0; // 0.0 projection onto x or or PI/2 for projection onto y
+    float angle = PI/3; // 0.0 projection onto x or or PI/2 for projection onto y
     bool filesRead = false;
     std::vector<String> fileNames;
 
@@ -28,7 +29,10 @@ class VideoPlayer : App {
 void VideoPlayer::getFileNames() {
     filesRead = true;
     File vids = SD.open("/vids");
-    if (!vids || !vids.isDirectory()) return;
+    if (!vids || !vids.isDirectory()) {
+        Serial.println("Directory /vids not found on SD-Card!");
+        return;
+    }
     File file = vids.openNextFile();
     while (file) {
         String* fn = new String(file.name());
@@ -61,7 +65,10 @@ void VideoPlayer::loop() {
     if (!filesRead) {
         getFileNames();
     }
-    if (fileNames.capacity()==0) return;
+    if (fileNames.capacity()==0) {
+        Serial.println("No /vids/*.vid file on SD-Card.");
+        return;
+    }
     if (millis()>nextFrame) {
         nextFrame = millis()+fmap(params.speed, 0, 255, 200, 4);
         if (!bitmap) {
@@ -80,21 +87,38 @@ void VideoPlayer::loop() {
         if (framenumber==0 || fileHeader.scrolling==0) {
             bitmap.readBytes(framedata, framesize);
         } else {
-            memmove(framedata, framedata+fileHeader.frameheight*fileHeader.bpp, (fileHeader.framewidth-1)*fileHeader.frameheight*fileHeader.bpp);
+            char* pt1 = framedata;
+            char* pt2 = framedata+fileHeader.frameheight*fileHeader.bpp;
+            for (int i=0; i<(fileHeader.framewidth-1)*fileHeader.frameheight*fileHeader.bpp; i++) {
+                *pt1 = *pt2;
+                pt1++;
+                pt2++;
+            }
+            //memmove(framedata, framedata+fileHeader.frameheight*fileHeader.bpp, (fileHeader.framewidth-1)*fileHeader.frameheight*fileHeader.bpp);
             bitmap.readBytes(framedata+(fileHeader.framewidth-1)*fileHeader.frameheight*fileHeader.bpp, fileHeader.frameheight*fileHeader.bpp);
         }
+        framenumber++;
         float led[3];
         float mul = fileHeader.frameheight/(params.maxs[2]-params.mins[2]);
         float zoff = -params.mins[2];
-        float xoff = -params.mins[0];        
+        float xoff = -params.mins[0];     
+        /*if (framenumber<10) {
+        for (int y=0; y<fileHeader.frameheight; y++) {
+            for (int x=0; x<fileHeader.framewidth; x++) {
+                if (framedata[y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp]) {
+                    Serial.print('#');
+                } else {
+                    Serial.print(' ');
+                }
+            }
+            Serial.println();
+        }}*/
         for (int i=0; i<NUMPIXEL; i++) {
             uint32_t color = 0;
             vec_rotxy(led, params.posdata[i], -angle);
-            int x = (led[0]+xoff)*mul;
+            int x = (led[1]+xoff)*mul;
             int y = (fileHeader.frameheight-(led[2]+zoff)*mul);
-            Serial.printf("led at %d,%d\n",x,y);
             if (x>=0 && y>=0 && x<fileHeader.framewidth && y<fileHeader.frameheight) {
-                uint32_t color = 0;
                 char* pt = framedata+y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp;
                 if (fileHeader.bpp==3) {
                     color = (*pt << 16) | (*(pt+1) << 8) | *(pt+2);

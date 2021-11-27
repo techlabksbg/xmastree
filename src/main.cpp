@@ -12,8 +12,9 @@ void setup(){
     // Serial port for debugging purposes
     Serial.begin(115200);
 
+    // TODO: Try 800KHZ (might just work!)
     // NeoPixels
-    params.pixels = new Adafruit_NeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ400);
+    params.pixels = new Adafruit_NeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
 
     // Initialize SPIFFS
     if(!SPIFFS.begin(true)){
@@ -32,7 +33,7 @@ void setup(){
 
     // Setup WebServer:
     webserver = new WebServer();
-    webserver->begin(false); // true = make ap, false = connect to tech-lab
+    webserver->begin(true); // true = make ap, false = connect to tech-lab
 }
 
 
