@@ -315,7 +315,7 @@ void WebServer::setupHTTP() {
   });
  
   // File Upload stuff
-    server->on("/sdcard", HTTP_GET, [](AsyncWebServerRequest *request) {
+    server->on("/sdcard/", HTTP_GET, [](AsyncWebServerRequest *request) {
         // From https://platformio.org/lib/show/6758/ESPAsyncWebServer-esphome/examples
         AsyncResponseStream *response = request->beginResponseStream("text/html");
         response->print("<!DOCTYPE html><html><head><title>WebFiles</title></head><body>");
@@ -324,7 +324,7 @@ void WebServer::setupHTTP() {
         fs::File root = SD.open("/vids");
         fs::File file = root.openNextFile();
         while(file) {
-            response->print("<li><a href=\"/sdcard/");
+            response->print("<li><a href=\"/sdcard");
             response->print(file.name());
             response->print("\">");
             response->print(file.name());
@@ -363,7 +363,7 @@ void WebServer::setupHTTP() {
         if (final) {
             if (file) {
                 file.close();
-                request->redirect("/sdcard");
+                request->redirect("/sdcard/");
                 //request->send(200, "text/plain", "Upload complete");
             } else {
                 request->redirect("/");
@@ -382,7 +382,7 @@ void WebServer::setupHTTP() {
             Serial.println(request->getParam("filename")->value());
             SD.remove(request->getParam("filename")->value());
         }
-        request->redirect("/files/");
+        request->redirect("/sdcard/");
     }); 
 
 
@@ -390,7 +390,7 @@ void WebServer::setupHTTP() {
         ESP.restart();
     }); 
 
-  server->serveStatic("/sdcard/", SD, "/");
+  server->serveStatic("/sdcard/vids", SD, "/vids");
   // Start server
   server->begin();
   Serial.println("WebServer up and running!");
