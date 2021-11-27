@@ -66,7 +66,10 @@ void VideoPlayer::loop() {
         nextFrame = millis()+fmap(params.speed, 0, 255, 200, 4);
         if (!bitmap) {
             bitmap = SD.open(fileNames[active]);
+            Serial.print("File open ");
+            Serial.println(fileNames[active]);
             bitmap.readBytes((char*)(&fileHeader), sizeof(FileHeader));
+            Serial.printf("Header %d x %d, scroll=%d, bpp=%d\n", fileHeader.framewidth, fileHeader.frameheight, fileHeader.scrolling, fileHeader.bpp);
             if (framedata!=nullptr) {
                 delete[] framedata;
             }
@@ -89,6 +92,7 @@ void VideoPlayer::loop() {
             vec_rotxy(led, params.posdata[i], -angle);
             int x = (led[0]+xoff)*mul;
             int y = (fileHeader.frameheight-(led[2]+zoff)*mul);
+            Serial.printf("led at %d,%d\n",x,y);
             if (x>=0 && y>=0 && x<fileHeader.framewidth && y<fileHeader.frameheight) {
                 uint32_t color = 0;
                 char* pt = framedata+y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp;

@@ -33,7 +33,8 @@ state = {
 	'brightness':%BRIGHTNESS%,
 	'speed':%SPEED%,
 	'color1':'%COLOR1%',
-	'color2':'%COLOR2%'
+	'color2':'%COLOR2%',
+	'text':'%TEXT%',
 };
 
 function mod(a,b) {
@@ -72,6 +73,9 @@ function makeColor(img, event, name) {
   <div><input type="range" id="speed" name="speed"
          min="0" max="255" value="%SPEED%" onchange="state['speed']=this.value;setProgram();">
 	  <label for="brightness">Speed</label>
+  </div>
+  <div>
+	  <input type="text" id="text" name="text" value="%TEXT%" onchange="state['text']=this.value;setProgram();">
   </div>
 	<div>
 		<img src="hsv400.png" width="400px" height="50px" onclick="makeColor(this, event, 'color1');">
