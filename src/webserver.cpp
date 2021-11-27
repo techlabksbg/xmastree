@@ -297,7 +297,7 @@ void WebServer::setupHTTP() {
     }
     if(request->hasParam("nr")) {
       int p  = atoi(request->getParam("nr")->value().c_str());
-      p =  (p<0) ? 0 : (p>=params.numPrograms ? params.numPrograms-1 : p);
+      p =  (p<0) ? 0 : (p>=params.apps.capacity() ? params.apps.capacity()-1 : p);
       if (p!=params.activeProgram) {
         params.newProgram = p;
         status += " program=";
@@ -314,6 +314,79 @@ void WebServer::setupHTTP() {
     request->send(200, "text/plain", status);
   });
  
+  // File Upload stuff
+    server->on("/sdcard", HTTP_GET, [](AsyncWebServerRequest *request) {
+        // From https://platformio.org/lib/show/6758/ESPAsyncWebServer-esphome/examples
+        AsyncResponseStream *response = request->beginResponseStream("text/html");
+        response->print("<!DOCTYPE html><html><head><title>WebFiles</title></head><body>");
+        response->print("<form action=\"/sdcard/upload\" method=\"post\" enctype=\"multipart/form-data\"><input type=\"file\" id=\"myfile\" name=\"myfile\"><input type=\"submit\"></form><br>");
+        // from https://techtutorialsx.com/2019/02/23/esp32-arduino-list-all-files-in-the-spiffs-file-system/
+        fs::File root = SD.open("/vids");
+        fs::File file = root.openNextFile();
+        while(file) {
+            response->print("<li><a href=\"/sdcard/");
+            response->print(file.name());
+            response->print("\">");
+            response->print(file.name());
+            /*
+            // TODO: FIXME: correctly url-encode file names.
+            response->print("</a> &nbsp; <a href=\"/sdcard/delete?filename=");
+            response->print(file.name());
+            response->print("\">delete</a>"); */
+            response->print("</li>\n");
+            Serial.println(file.name());        
+            file = root.openNextFile();
+        }
+
+        response->print("</ul></body></html>\n");
+        request->send(response);
+    });
+
+    server->on("/sdcard/upload", HTTP_POST, [](AsyncWebServerRequest *request) {}, 
+    [](AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
+        static fs::File file;
+        if (!index) {
+            Serial.print("Upoad URL = ");
+            Serial.println(request->url());
+            file = SD.open(String("/vids/") + filename, FILE_WRITE);
+            if (!file) {
+                Serial.print("Could not open file ");
+                Serial.println(filename);
+            }
+            Serial.printf("UploadStart: %s\n", filename.c_str());
+        }
+        for (size_t i = 0; i < len; i++) {
+            if (file) {
+                Serial.print((char)data[i]);
+                file.write(data[i]);
+            }
+        }
+        if (final) {
+            if (file) {
+                file.close();
+                request->redirect("/sdcard");
+                //request->send(200, "text/plain", "Upload complete");
+            } else {
+                request->redirect("/");
+                //request->send(200, "text/plain", "Upload FAILED!");
+            }
+            Serial.printf("UploadEnd: %s, %u B\n", filename.c_str(), index + len);
+        }
+    });
+
+
+    /*
+    server->on("/delete", HTTP_GET, [](AsyncWebServerRequest *request){
+        Serial.println("on /delete");
+        if(request->hasParam("filename")) {
+            // TODO: FIXME: correctly decode url-encoded file names
+            Serial.println(request->getParam("filename")->value());
+            SPIFFS.remove(request->getParam("filename")->value());
+        }
+        request->redirect("/files/");
+    }); */
+
+  server->serveStatic("/sdcard/", SD, "/");
   // Start server
   server->begin();
   Serial.println("WebServer up and running!");
