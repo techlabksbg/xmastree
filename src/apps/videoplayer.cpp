@@ -73,10 +73,14 @@ void VideoPlayer::loop() {
         nextFrame = millis()+fmap(params.speed, 0, 255, 200, 4);
         if (!bitmap) {
             bitmap = SD.open(fileNames[active]);
+            if (!bitmap) {
+                filesRead = false;
+                return;
+            }
             Serial.print("File open ");
             Serial.println(fileNames[active]);
             bitmap.readBytes((char*)(&fileHeader), sizeof(FileHeader));
-            Serial.printf("Header %d x %d, scroll=%d, bpp=%d\n", fileHeader.framewidth, fileHeader.frameheight, fileHeader.scrolling, fileHeader.bpp);
+            //Serial.printf("Header %d x %d, scroll=%d, bpp=%d\n", fileHeader.framewidth, fileHeader.frameheight, fileHeader.scrolling, fileHeader.bpp);
             if (framedata!=nullptr) {
                 delete[] framedata;
             }
