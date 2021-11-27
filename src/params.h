@@ -20,7 +20,6 @@
 struct Params {
     int activeProgram = 4;
     int newProgram = 2;
-    int numPrograms = 9;
     int brightness = 255;
     int speed = 200;
     bool isAutoRunning = false;
