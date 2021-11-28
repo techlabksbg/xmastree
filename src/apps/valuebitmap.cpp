@@ -9,6 +9,14 @@ class ValueBitmap : App {
     virtual const char* buttonName() { return "Tech-Lab"; }
     virtual bool loopFast() { return true; }
     virtual bool setGoodParams();
+    virtual void stop();
+
+    private:
+    File bitmap;
+    const char*files[2] = {"/values.bin", "/ksbg.bin"};
+    int active = 0;
+    char* values = nullptr;
+    unsigned int nextFrame = 0;
 
 };
 
@@ -18,16 +26,24 @@ bool ValueBitmap::setGoodParams() {
     return true;
 }
 
-void ValueBitmap::loop() {
-    static File bitmap;
-    static const char*files[] ={"/values.bin", "/ksbg.bin"};
-    static int active = 0;
-    static char values[NUMPIXEL];
-    static unsigned int nextFrame = 0;
+void ValueBitmap::stop() {
+    Serial.println("Stopping ValueBitmap");
+    bitmap.close();
+    active = (active+1)%2;
+    nextFrame = 0;
+    if (values!=nullptr) {
+        delete[] values;
+    }
+}
+
+void ValueBitmap::loop() {    
     if (millis()>nextFrame) {
         nextFrame = millis()+fmap(params.speed, 0, 255, 200, 4);
-        if (!bitmap) {
+        if (!bitmap) { // Open file if necessary
             bitmap = SPIFFS.open(files[active]);
+        }
+        if (values==nullptr) { // Allocate buffer, if necessary
+            values = new char[NUMPIXEL];
         }
         bitmap.readBytes(values, NUMPIXEL);
         for (int i=0; i<NUMPIXEL; i++) {
@@ -35,8 +51,7 @@ void ValueBitmap::loop() {
         }
         params.pixels->show();
         if (! bitmap.available()) {
-            bitmap.close();
-            active = (active+1)%2;
+            stop();
         }
     }
 }
