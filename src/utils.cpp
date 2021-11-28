@@ -4,16 +4,40 @@ float fmap(float v, float fromMin, float fromMax, float toMin, float toMax) {
   return (v-fromMin)*(toMax-toMin)/(fromMax-fromMin)+toMin;
 }
 
-
-int mix(float f) {
+int color_mix(float t, int col1, int col2) {
   int r = 0;
   for (int i=0; i<3; i++) {
-    int c1 = params.color1 & (0xff << (8*i));
-    int c2 = params.color2 & (0xff << (8*i));
-    int c3 = (1.0-f)*c1+f*c2;
+    int c1 = col1 & (0xff << (8*i));
+    int c2 = col2 & (0xff << (8*i));
+    int c3 = (1.0-t)*c1+t*c2;
+    r += c3 & (0xff<<(8*i));
+  } 
+  return r;
+}
+
+int mix(float f) {
+  return color_mix(f, params.color1, params.color2);
+}
+
+
+/**
+ * @brief Adds colors (clipping at 255);
+ * 
+ * @param c1 color1
+ * @param c2 color2
+ * @return int addition of c1 and c2
+ */
+int color_add(int col1, int col2) {
+  int r = 0;
+  for (int i=0; i<3; i++) {
+    int c1 = col1 & (0xff << (8*i));
+    int c2 = col2 & (0xff << (8*i));
+    int c3 = c1+c2;
+    if (c3>(0xff << (8*i))) {
+      c3 = 0xff << (8*i);
+    }
     r += c3 & (0xff<<(8*i));
   }
-  //Serial.printf("mix %f of color1=%06x and color2=%06x results in %06x\n", f, color1, color2, r);
   return r;
 }
 
@@ -185,4 +209,15 @@ float dist_to_segment(float* pt, float* sega, float* segb) {
   vec_mul(vec_copy(v,segb),t);
   vec_add_mull(v, sega, 1.0-t);
   return vec_dist(v,pt);
+}
+
+float* bezier2(float* dst, float t, float* pts) {
+    float c[3] = {(1-t)*(1-t), 2*(1-t)*t, t*t};
+    for (int i=0; i<3; i++) {
+        dst[i] = 0.0;
+        for (int j=0; j<3; j++) {
+            dst[i]+=c[j]*pts[3*j+i];
+        }
+    }
+    return dst;
 }

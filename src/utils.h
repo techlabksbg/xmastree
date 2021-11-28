@@ -20,6 +20,18 @@ float fmap(float v, float fromMin, float fromMax, float toMin, float toMax);
 int mix(float f);
 
 /**
+ * @brief Interpolate two colors
+ * 
+ * @param t (0 means c1, 0.5 average, 1 means c2)
+ * @param c1 
+ * @param c2 
+ * @return int Superpose two colors
+ */
+int color_mix(float t, int c1, int c2);
+
+int color_add(int c1, int c2);
+
+/**
  * @brief RGB-scaling of a color (basically dimming it)
  * 
  * @param f Scale factor (typically in [0,1])
@@ -159,4 +171,19 @@ float line_project(float* pt, float* linea, float* lineb);
  */
 float dist_to_segment(float* pt, float* sega, float* segb);
 
+/**
+ * @brief print a vector to Serial
+ * 
+ * @param v 
+ */
 void vec_print(float *v);
+
+/**
+ * @brief Get a point on a quadratic bezier curve.
+ * 
+ * @param dst result vector
+ * @param t parameter on curve
+ * @param pts control points (linear float[9] array)
+ * @return float* point on curve
+ */
+float* bezier2(float* dst, float t, float* pts);
