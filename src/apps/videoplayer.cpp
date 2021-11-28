@@ -17,12 +17,22 @@ class VideoPlayer : App {
     virtual const char* buttonName() { return "VideoPlayer"; }
     virtual bool setGoodParams();
     virtual bool loopFast() { return true; }
+    virtual void stop();
+
+    private:
 
     void getFileNames();
     float angle = PI/3; // 0.0 projection onto x or or PI/2 for projection onto y
     bool filesRead = false;
     std::vector<String> fileNames;
 
+    File bitmap;
+    int active = 0;
+    unsigned int nextFrame = 0;
+    FileHeader fileHeader;
+    char* framedata=nullptr;
+    size_t framesize;
+    int framenumber = 0;
 };
 
 // from https://randomnerdtutorials.com/esp32-microsd-card-arduino/
@@ -38,7 +48,7 @@ void VideoPlayer::getFileNames() {
         String* fn = new String(file.name());
         Serial.println(*fn);
         if (fn->endsWith(".vid")) {
-            Serial.print("   \\__ memorized");
+            Serial.println("   \\__ memorized");
             fileNames.push_back(*fn);
         } else {
             delete fn;
@@ -54,14 +64,20 @@ bool VideoPlayer::setGoodParams() {
     return false;
 }
 
+void VideoPlayer::stop() {
+    nextFrame = 0;
+    if (bitmap) {
+        bitmap.close();
+    }
+    if (framedata != nullptr) {
+        delete[] framedata;
+        framedata = nullptr;
+    }
+    Serial.println("VideoPlayer::stop()");
+    active = (active+1)%fileNames.capacity();
+}
+
 void VideoPlayer::loop() {
-    static File bitmap;
-    static int active = 0;
-    static unsigned int nextFrame = 0;
-    static FileHeader fileHeader;
-    static char* framedata=nullptr;
-    static size_t framesize;
-    static int framenumber = 0;
     if (!filesRead) {
         getFileNames();
     }
@@ -134,10 +150,7 @@ void VideoPlayer::loop() {
         }
         params.pixels->show();
         if (! bitmap.available()) {
-            bitmap.close();
-            delete[] framedata;
-            framedata = nullptr;
-            active = (active+1)%fileNames.capacity();
+            stop();
         }
     }
 
