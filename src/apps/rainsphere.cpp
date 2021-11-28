@@ -14,7 +14,7 @@ class RainSphere : App {
 
 bool RainSphere::setGoodParams() {
     params.speed = 170;
-    params.brightness = 127;
+    params.brightness = 80;
     return true;
 }
 
