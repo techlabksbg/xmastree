@@ -47,12 +47,23 @@ void loop() {
         params.isAutoRunning = true;
     }
     if (params.newProgram!=params.activeProgram) {
+        // Stop current app
+        if (params.activeProgram>=0) {
+            params.apps[params.activeProgram]->stop();
+        }
         params.activeProgram = params.newProgram;
         fastLoop = (params.activeProgram>=0 && params.apps[params.activeProgram]->loopFast());
         nextStep = millis();
-        params.pixels->clear();
-        params.pixels->show();
-        Serial.printf("Now running %s\n", params.apps[params.activeProgram]->buttonName());
+        if (params.activeProgram>=0) {
+            params.pixels->clear();
+            params.pixels->show();
+        } else if (params.singlePixel>=0) {
+            params.pixels->clear();
+            params.pixels->setPixelColor(params.singlePixel, 255,255,255);
+        }
+        if (params.activeProgram>=0) {
+            Serial.printf("Now running %s\n", params.apps[params.activeProgram]->buttonName());
+        }
     }
     if (millis()>nextStep || fastLoop) {
         nextStep = millis()+40;  // 25fps;

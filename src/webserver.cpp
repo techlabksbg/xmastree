@@ -226,13 +226,14 @@ void WebServer::setupHTTP() {
         status += " Pixel ";
         status += led;
         status += "set.";
+        params.singlePixel = led;
       } else {
+        params.singlePixel = -1;
         status += " all clear.";
       }
       params.pixels->show();
       if (params.activeProgram!=-1) {
         params.newProgram = -1;
-        params.activeProgram = -1;
       }
     } else {
       status += "missing parameter 'led'";

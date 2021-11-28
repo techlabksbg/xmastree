@@ -22,6 +22,7 @@ struct Params {
     int newProgram = 2;
     int brightness = 255;
     int speed = 200;
+    int singlePixel = -1;
     bool isAutoRunning = false;
     unsigned long lastCmd = 0;
     uint32_t color1 = 0xff0000;
