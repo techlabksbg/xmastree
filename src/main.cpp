@@ -49,6 +49,7 @@ void loop() {
     if (params.newProgram!=params.activeProgram) {
         // Stop current app
         if (params.activeProgram>=0) {
+            Serial.printf("Stoping %s\n", params.apps[params.activeProgram]->buttonName());
             params.apps[params.activeProgram]->stop();
         }
         params.activeProgram = params.newProgram;
