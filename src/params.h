@@ -6,6 +6,8 @@
 #include "app.h"
 #include "SD.h"
 
+
+
 #define PIN 13
 #define NUMPIXEL 500
 
@@ -15,7 +17,59 @@
 #define SPI_MISO      19
 #define SPI_SCK       18
 
+//#define TIGERDEBUG
 
+#ifdef TIGERDEBUG
+#include "WiFi.h"
+class MyNeoPixel : public Adafruit_NeoPixel {
+    public:
+    byte* buffer;
+    MyNeoPixel(uint16_t n, int16_t pin = (int16_t)6, neoPixelType type = (neoPixelType)82U) :
+        Adafruit_NeoPixel(n,pin,type) {
+            buffer = new byte[3*NUMPIXEL];
+    }
+
+    WiFiClient client;
+    
+    void begin() {
+        client.connect("192.168.42.2", 10000);
+        if (client) {
+            Serial.println("Connection to 192.168.42.2:10000 established!");
+        } else {
+            Serial.println("Connection to 192.168.42.2:10000 failed!");
+        }
+    }
+
+    void show() {
+        Adafruit_NeoPixel::show();
+        if (!client) {
+            begin();
+            if (!client) {
+                Serial.println("abort show");
+                return;
+            }
+        } else if (!client.connected() || !client.availableForWrite()) {
+            Serial.println("Lost connection!");
+            client.stop();
+            return;
+        }
+
+        // get ColorData
+        for (int i=0; i<NUMPIXEL; i++) {
+            int c = getPixelColor(i);
+            buffer[i*3] = c >> 16;
+            buffer[i*3+1] = (c>>8) & 0xff;
+            buffer[i*3+2] = c & 0xff;
+        }
+        // send ColorData
+        Serial.println("Sending color data");
+        int bytesWritten = client.write(buffer, 1500);
+        client.stop();
+    }
+    
+};
+
+#endif
 
 struct Params {
     int activeProgram = 4;
@@ -30,10 +84,14 @@ struct Params {
     String text = "TECHLAB";
     float posdata[NUMPIXEL][3];
     std::vector<App*> apps;
+#ifdef TIGERDEBUG
+    MyNeoPixel* pixels;
+#else
     Adafruit_NeoPixel* pixels;
+#endif
     std::vector<float> mins = std::vector<float> (3, 500);
     std::vector<float> maxs = std::vector<float> (3, -500);
-
+    
     void readPosData() {
         File f = SPIFFS.open("/posdata.txt", FILE_READ);
         if (f) {
@@ -53,11 +111,18 @@ struct Params {
         }
     }
 
-    
+    void begin() {
+        // NeoPixels
+#ifdef TIGERDEBUG        
+        pixels = new MyNeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
+#else
+        pixels = new Adafruit_NeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
+#endif
+        readPosData();
+    }
+
 };
 
 
 extern Params params;
-
-
 

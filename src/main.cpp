@@ -12,9 +12,6 @@ void setup(){
     // Serial port for debugging purposes
     Serial.begin(115200);
 
-    // TODO: Try 800KHZ (might just work!)
-    // NeoPixels
-    params.pixels = new Adafruit_NeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
 
     // Initialize SPIFFS
     if(!SPIFFS.begin(true)){
@@ -28,8 +25,9 @@ void setup(){
     SPI.begin(SPI_SCK, SPI_MISO, SPI_MOSI);  // See param.h for pin definition
     SD.begin(SD_CS);
     Serial.println("SD card init over");
-    // Read LED-Positions
-    params.readPosData();
+
+    // Read LED-Positions, Initialize NeoPixels
+    params.begin();
 
     // Setup WebServer:
     webserver = new WebServer();
