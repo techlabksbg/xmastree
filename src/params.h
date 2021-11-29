@@ -27,9 +27,8 @@ class MyNeoPixel : public Adafruit_NeoPixel {
     byte* colorData;
     MyNeoPixel(uint16_t n, int16_t pin = (int16_t)6, neoPixelType type = (neoPixelType)82U);
 
-    int sock = 0;
-    
-    void begin();
+    WiFiUDP udp;
+
     void show();
 };
 
