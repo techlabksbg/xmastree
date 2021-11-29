@@ -17,9 +17,9 @@
 #define SPI_MISO      19
 #define SPI_SCK       18
 
-//#define TIGERDEBUG
+//#define WIFIDEBUG
 
-#ifdef TIGERDEBUG
+#ifdef WIFIDEBUG
 #include "WiFi.h"
 class MyNeoPixel : public Adafruit_NeoPixel {
     public:
@@ -34,9 +34,9 @@ class MyNeoPixel : public Adafruit_NeoPixel {
     void begin() {
         client.connect("192.168.42.2", 10000);
         if (client) {
-            Serial.println("Connection to 192.168.42.2:10000 established!");
+            //Serial.println("Connection to 192.168.42.2:10000 established!");
         } else {
-            Serial.println("Connection to 192.168.42.2:10000 failed!");
+            //Serial.println("Connection to 192.168.42.2:10000 failed!");
         }
     }
 
@@ -45,11 +45,11 @@ class MyNeoPixel : public Adafruit_NeoPixel {
         if (!client) {
             begin();
             if (!client) {
-                Serial.println("abort show");
+                //Serial.println("abort show");
                 return;
             }
         } else if (!client.connected() || !client.availableForWrite()) {
-            Serial.println("Lost connection!");
+            //Serial.println("Lost connection!");
             client.stop();
             return;
         }
@@ -62,8 +62,8 @@ class MyNeoPixel : public Adafruit_NeoPixel {
             buffer[i*3+2] = c & 0xff;
         }
         // send ColorData
-        Serial.println("Sending color data");
-        int bytesWritten = client.write(buffer, 1500);
+        //Serial.println("Sending color data");
+        client.write(buffer, 1500);
         client.stop();
     }
     
@@ -84,7 +84,7 @@ struct Params {
     String text = "TECHLAB";
     float posdata[NUMPIXEL][3];
     std::vector<App*> apps;
-#ifdef TIGERDEBUG
+#ifdef WIFIDEBUG
     MyNeoPixel* pixels;
 #else
     Adafruit_NeoPixel* pixels;
@@ -113,7 +113,7 @@ struct Params {
 
     void begin() {
         // NeoPixels
-#ifdef TIGERDEBUG        
+#ifdef WIFIDEBUG        
         pixels = new MyNeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
 #else
         pixels = new Adafruit_NeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
