@@ -13,11 +13,13 @@ class TextProjector : App {
     virtual void loop();
     virtual const char* buttonName() { return "Display Text"; };
     virtual bool loopFast() { return true; };
+    virtual void stop();
     void updatetext();
     void shiftin();
     vector<float> projectedcoords [NUMPIXEL];
     pair<int, int> finals [NUMPIXEL];
-    float projectto [3] = {5000, 5000, 180};
+    // what does that mean?
+    float projectto [3] = {5000, 5000, 150};
     float vectocen [3] = {-projectto[0], -projectto[1], 100 - projectto[2]};
     float xproj [3];
     float yproj [3];
@@ -26,7 +28,7 @@ class TextProjector : App {
     float maxprop = 0.95;
     float multpfac;
     String towrite = "HALLO";
-    bool *on;
+    bool *on  = nullptr;
     bool inited = false;
     int padding = 30;
     int tonex = 200;
@@ -39,6 +41,16 @@ class TextProjector : App {
     vector<int> indx;
     vector<int> widths;
 };
+
+void TextProjector::stop() {
+    if (filee) {
+        filee.close();
+    }
+    if (on!=nullptr) {
+        delete[] on;
+        on = nullptr;
+    }
+}
 
 void TextProjector::shiftin(){
     if (botx + width> widths[imind]){
@@ -90,6 +102,9 @@ void TextProjector::updatetext(){
         }
         if (charcs[ind] == towrite[charc]){
             String bas = "/letters/";
+            if (filee) {
+                filee.close();
+            }
             filee = SD.open(bas + ind + ".txt", FILE_READ);
             int widthy = filee.parseInt();
             len += widthy + padding;
@@ -97,9 +112,9 @@ void TextProjector::updatetext(){
             indx.push_back(ind);
         }
     }
-
-    delete on;
-    on = new bool [width*256];
+    if (on == nullptr) {
+        on = new bool [width*256];
+    }
     for (int zeroer = 0; zeroer < width*256; zeroer++){
         on[zeroer] = false;
     }
@@ -107,6 +122,9 @@ void TextProjector::updatetext(){
     botx = -1*width;
     imind = 0;
     String bas = "/letters/";
+    if (filee) {
+        filee.close();
+    }
     filee = SD.open(bas + indx[0] + ".txt", FILE_READ);
     filee.parseInt();
     imheight = filee.parseInt();
