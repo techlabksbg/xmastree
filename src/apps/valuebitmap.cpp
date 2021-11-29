@@ -28,11 +28,16 @@ bool ValueBitmap::setGoodParams() {
 
 void ValueBitmap::stop() {
     Serial.println("Stopping ValueBitmap");
-    bitmap.close();
+    if (bitmap) {
+        Serial.println("  bitmap close");
+        bitmap.close();
+    }
     active = (active+1)%2;
     nextFrame = 0;
     if (values!=nullptr) {
+        Serial.println("delete[] values");
         delete[] values;
+        values = nullptr;
     }
 }
 
@@ -50,7 +55,7 @@ void ValueBitmap::loop() {
             params.pixels->setPixelColor(i, scale(values[i]/255.0,params.color1));
         }
         params.pixels->show();
-        if (! bitmap.available()) {
+        if (!bitmap.available()) {
             stop();
         }
     }
