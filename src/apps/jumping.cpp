@@ -34,13 +34,14 @@ class Jumping::Jumper {
         ctrlPoints[6] = cos(w)*r;
         ctrlPoints[7] = sin(w)*r;
         ctrlPoints[8] = 0.0;
-        float h = random(100)+120;
+        float h = 2*(random(190)+30);
         ctrlPoints[3] = 0;
         ctrlPoints[4] = 0;
         ctrlPoints[5] = h;
         // s = 1/2 g t^2   <=> t = sqrt(2s/g);
         float ttot = 2*sqrt(2*h/100.0/9.81);
         tmul = 1/ttot;
+        //Serial.printf("New Jumper with ttot=%.3f and tmul=%.3f\n", ttot, tmul);
         color = params.pixels->ColorHSV(random(0xffff),255,127);
     }
     ~Jumper() {
@@ -66,18 +67,24 @@ bool Jumping::setGoodParams() {
 }
 
 void Jumping::stop() {
-    while (jumpers.capacity()>0) {
+    while (jumpers.size()>0) {
         delete jumpers.back();
         jumpers.pop_back();
     }
 }
 
 void Jumping::loop() {
+    static int speed=-1;
+    if (speed!=params.speed) { // Handle speed change
+        speed = params.speed;
+        stop(); // Just delete current objects (if any)
+    }
     float t = secs()/fmap(params.speed, 0, 255, 10, 1.0);
     // Generate jumpers
-    while (jumpers.capacity()<5) {
+    while (jumpers.size()<5) {
         jumpers.push_back(new Jumper(t));
     }
+    //unsigned long start = micros(); Takes ages !?!?
     for (int i=0; i<NUMPIXEL; i++) {
         int color = 0;
         for(auto const& jumper: jumpers) {
@@ -85,7 +92,8 @@ void Jumping::loop() {
         }
         params.pixels->setPixelColor(i, color);
     }
-
+    //start = micros()-start;
+    //Serial.printf("Jumping rendering: %ld us\n",start);
     // Remove finished jumpers
     for (auto it=jumpers.begin(); it!=jumpers.end();) {
         if ((*it)->done(t)) {
