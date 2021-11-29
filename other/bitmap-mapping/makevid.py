@@ -10,7 +10,7 @@ out = open("out.vid", "wb")
 scroll = 1 if len(sys.argv)==2 else 0
 headwritten = False
 for fname in sys.argv[1:]:
-    print(fname)#, end="\r");
+    print(fname, end="\r");
     # Image
     img = cv2.imread(fname, cv2.IMREAD_UNCHANGED) 
 
@@ -33,7 +33,7 @@ for fname in sys.argv[1:]:
             b+= int(x).to_bytes(2, byteorder='little')
         out.write(b)
 
-    for x in range(w):
+    for x in range(ww):
         for y in range(h):
             if gray:
                 out.write(bytes([img[y][x]]))
