@@ -9,7 +9,6 @@ NUMLEDS = 500
 
 # Create a UDP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#sock.allow_reuse_address = True
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 try:
@@ -17,8 +16,6 @@ try:
     server_address = ('192.168.42.2', 10000)
     print('starting up on %s port %s' % server_address)
     sock.bind(server_address)
-    #sock.listen(1)
-    #sock.settimeout(10);
     size = width, height = 800,800 
     screen = pygame.display.set_mode(size)
     
@@ -31,24 +28,22 @@ try:
     colorData = b'';
     while True:
         i+=1
-        #print("Reading next data block...");
         fails = 0
         while len(colorData)<3*NUMLEDS:
-            #print('.',)
             data, address = sock.recvfrom(2048)
             if (len(data)>0):
-                print("Got %d bytes" % len(data))
+                #print("Got %d bytes" % len(data))
                 colorData+=bytes(data)
                 magic = colorData.find(b"MaGiC0");
                 if (magic>=0 and magic<1500):
-                    print("Found magic at index %d, len(colorData)=%d" % (magic, len(colorData)))
+                    #print("Found magic at index %d, len(colorData)=%d" % (magic, len(colorData)))
                     colorData = colorData[(magic+6):]  #truncate data
-                    print("len(colorData)=%d" % len(colorData))
+                    #print("len(colorData)=%d" % len(colorData))
 
         auge = Vector([0,300,100+50*sin(i/20)])
-        screen.fill((0,0,0))
+        screen.fill((5,10,15))
         for l,led in enumerate(leds):
-            p = led.rotatexy(i/300).projectxz(auge)
+            p = led.rotatexy(-3.1415/2).projectxz(auge)
             p *= 3
             p += Vector([400,50])
             
