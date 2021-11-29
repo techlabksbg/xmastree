@@ -22,7 +22,7 @@ class VideoPlayer : App {
     private:
 
     void getFileNames();
-    float angle = PI/3; // 0.0 projection onto x or or PI/2 for projection onto y
+    float angle = 0;//PI/3; // 0.0 projection onto x or or PI/2 for projection onto y
     bool filesRead = false;
     std::vector<String> fileNames;
 
@@ -96,7 +96,7 @@ void VideoPlayer::loop() {
             Serial.print("File open ");
             Serial.println(fileNames[active]);
             bitmap.readBytes((char*)(&fileHeader), sizeof(FileHeader));
-            //Serial.printf("Header %d x %d, scroll=%d, bpp=%d\n", fileHeader.framewidth, fileHeader.frameheight, fileHeader.scrolling, fileHeader.bpp);
+            Serial.printf("Header %d x %d, scroll=%d, bpp=%d\n", fileHeader.framewidth, fileHeader.frameheight, fileHeader.scrolling, fileHeader.bpp);
             if (framedata!=nullptr) {
                 delete[] framedata;
             }
@@ -141,7 +141,7 @@ void VideoPlayer::loop() {
             if (x>=0 && y>=0 && x<fileHeader.framewidth && y<fileHeader.frameheight) {
                 char* pt = framedata+y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp;
                 if (fileHeader.bpp==3) {
-                    color = (*pt << 16) | (*(pt+1) << 8) | *(pt+2);
+                    color = (*pt) | (*(pt+1) << 8) | (*(pt+2) << 16);
                 } else {
                     color = scale(*pt/255.0, params.color1);
                 }
