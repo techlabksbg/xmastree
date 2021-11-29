@@ -10,10 +10,9 @@ out = open("out.vid", "wb")
 scroll = 1 if len(sys.argv)==2 else 0
 headwritten = False
 for fname in sys.argv[1:]:
-    print(fname, end="\r");
+    print(fname)#, end="\r");
     # Image
     img = cv2.imread(fname, cv2.IMREAD_UNCHANGED) 
-    #cv2.imshow('out', img)
 
     if not headwritten:
         headwritten = True
@@ -28,7 +27,7 @@ for fname in sys.argv[1:]:
 
         ww = min([w, int(h/180.0*140.0)])
         print("Writing header with %d x %d" % (ww,h))
-        header = [ww, h, 1, bpp]  # 1 scrolling, 1 bpp
+        header = [ww, h, scroll, bpp]  # 1 scrolling, 1 bpp
         b = b''
         for x in header:
             b+= int(x).to_bytes(2, byteorder='little')
