@@ -23,7 +23,7 @@ class ValueBitmap : App {
 bool ValueBitmap::setGoodParams() {
     params.speed = 255;
     params.color1 = 0xffaa00;
-    return true;
+    return false;
 }
 
 void ValueBitmap::stop() {

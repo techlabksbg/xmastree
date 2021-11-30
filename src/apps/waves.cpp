@@ -13,7 +13,7 @@ class Wave : App {
 
 bool Wave::setGoodParams() {
     params.brightness = 255;    
-    return true;
+    return false;
 }
 
 void Wave::loop() {

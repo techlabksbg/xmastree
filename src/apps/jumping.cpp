@@ -17,6 +17,12 @@ class Jumping : App {
     std::vector<Jumper*> jumpers;
 };
 
+bool Jumping::setGoodParams() {
+    params.speed = 180;
+    params.brightness = 255;
+    return true;
+}
+
 class Jumping::Jumper {
     public:
     float t0;
@@ -60,11 +66,6 @@ class Jumping::Jumper {
         return (t-t0)*tmul>=1.0;
     }
 };
-
-bool Jumping::setGoodParams() {
-    params.brightness = 255;    
-    return false;
-}
 
 void Jumping::stop() {
     while (jumpers.size()>0) {

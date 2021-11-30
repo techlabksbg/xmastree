@@ -6,8 +6,14 @@ class HSVCycle : App {
     public:
     virtual void loop();
     virtual const char* buttonName() { return "HSV Cycle"; }
+    virtual bool setGoodParams();
 };
 
+bool HSVCycle::setGoodParams() {
+    params.brightness = 50;
+    params.speed = 200;
+    return true;
+}
 
 void HSVCycle::loop() {
     float t = secs()/fmap(params.speed, 0, 255, 20, 1.0);

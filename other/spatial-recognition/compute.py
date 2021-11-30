@@ -28,31 +28,35 @@ for f in sys.argv[1:]:
 numleds = len(dirs[0])
 nummeasures = len(base)
 positions = []
+print(nummeasures)
 
 
 for i in range(nummeasures-1):
     for j in range(i+1,nummeasures):
+        print(i,j)
         positions.append([getPoint([base[i], base[j]], [dirs[i][k], dirs[j][k]]) for k in range(numleds)])
 
+pts = []
 if len(positions)>1:
-    pts = []
     for k in range(numleds):
         kp = [p[k] for p in positions]
         kp = median(kp)
         pts.append(kp)
     pts = [[round(x,1) for x in e] for e in pts]
     print(pts)
-    datafile = open("posdata.txt", "w") 
-    for p in pts:
-        datafile.write("%.1f %.1f %.1f\n" % tuple(p))
-    datafile.close
-    datafile = open("posdata.py", "w")
-    datafile.write("leds = ")
-    datafile.write(str(pts))
-    datafile.write("\n")
-    datafile.close()
-else:   
-    print([list(map(lambda x:round(x,1), list(e))) for e in positions[0]])
+else:
+    print(positions)
+    pts = positions[0]
+
+datafile = open("posdata.txt", "w") 
+for p in pts:
+    datafile.write("%.1f %.1f %.1f\n" % tuple(p))
+datafile.close
+datafile = open("posdata.py", "w")
+datafile.write("leds = ")
+datafile.write(str(pts))
+datafile.write("\n")
+datafile.close()
 
 
 

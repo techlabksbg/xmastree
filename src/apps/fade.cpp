@@ -6,7 +6,16 @@ class Fade : App {
     public:
     virtual void loop();
     virtual const char* buttonName() { return "Fade"; }
+    virtual bool setGoodParams();
+
 };
+
+bool Fade::setGoodParams() {
+    params.speed = 150;
+    params.brightness = 60;
+    params.color1 = 0xff0000;
+    params.color2 = 0x00ffff;
+}
 
 
 void Fade::loop() {   

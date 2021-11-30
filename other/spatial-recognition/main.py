@@ -12,7 +12,8 @@ NUMLEDS = 500
 # campos = np.mat([[-40,250,87]]).transpose() # Hinter balken
 # campos = np.mat([[165, 197,118]]).transpose()
 # campos = np.mat([[227,93,86]]).transpose()
-campos = np.mat([[-39,221,85]]).transpose() # Hinter balken
+#campos = np.mat([[-68,210,65]]).transpose() # Hinter balken
+campos = np.mat([[237,24,65]]).transpose() # Hinter balken
 
 
 # Matrix to get space coordinates
@@ -28,8 +29,8 @@ print("baumpoly")
 print(baumpoly)
 
 def setLed(nr):
-#    conn = http.client.HTTPConnection("192.168.42.1",80)
-    conn = http.client.HTTPConnection("192.168.1.75",80)
+    conn = http.client.HTTPConnection("192.168.42.1",80)
+#    conn = http.client.HTTPConnection("192.168.1.75",80)
     conn.request("GET", "/setled?led=%d"%nr)
     r = conn.getresponse()
     data = r.read()

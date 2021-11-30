@@ -27,7 +27,7 @@ bool MovingPlane::setGoodParams() {
 
     }
     p = (p+1)%2;
-    return true;
+    return false;
 }
 
 
