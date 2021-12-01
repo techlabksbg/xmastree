@@ -46,7 +46,7 @@ if len(positions)>1:
     print(pts)
 else:
     print(positions)
-    pts = positions[0]
+    pts = [list(p) for p in positions[0]]
 
 datafile = open("posdata.txt", "w") 
 for p in pts:
