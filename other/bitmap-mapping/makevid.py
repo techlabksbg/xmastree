@@ -10,7 +10,7 @@ out = open("out.vid", "wb")
 scroll = 1 if len(sys.argv)==2 else 0
 headwritten = False
 
-def gamma(colorvalues) {
+def gamma(colorvalues): 
     return bytes([v*v//255 for v in colorvalues])
 
 for fname in sys.argv[1:]:
@@ -37,7 +37,7 @@ for fname in sys.argv[1:]:
             b+= int(x).to_bytes(2, byteorder='little')
         out.write(b)
 
-    for x in range(ww):
+    for x in range(ww if scroll==0 else w):
         for y in range(h):
             if gray:
                 out.write(bytes([img[y][x]]))
