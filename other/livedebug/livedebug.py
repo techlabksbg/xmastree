@@ -40,10 +40,10 @@ try:
                     colorData = colorData[(magic+6):]  #truncate data
                     #print("len(colorData)=%d" % len(colorData))
 
-        auge = Vector([0,300,100+50*sin(i/20)])
+        auge = Vector([0,300,140]) #100+50*sin(i/20)])
         screen.fill((5,10,15))
         for l,led in enumerate(leds):
-            p = led.rotatexy(-3.1415/2).projectxz(auge)
+            p = led.rotatexy(3.1415926).projectxz(auge)
             p *= 3
             p += Vector([400,50])
             
