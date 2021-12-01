@@ -15,6 +15,7 @@ bool Fade::setGoodParams() {
     params.brightness = 60;
     params.color1 = 0xff0000;
     params.color2 = 0x00ffff;
+    return true;
 }
 
 
