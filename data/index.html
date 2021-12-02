@@ -10,11 +10,14 @@
 	<script>
 
 function setProgram() {
+	if (state['waitForIt'] == "dary") return;
+	state['waitForIt'] = "dary";
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 		   // Typical action to be performed when the document is ready:
 		   document.getElementById("status").innerHTML = xhttp.responseText;
+		   state['waitForIt'] = "";
 		}
 	};
 	var url = '/prg';
@@ -26,6 +29,8 @@ function setProgram() {
 	console.log(url);
 	xhttp.open("GET", url, true);
 	xhttp.send();
+	state['drawx'] = 0;
+	state['drawy'] = 0;
 }
 
 state = {
@@ -35,6 +40,8 @@ state = {
 	'color1':'%COLOR1%',
 	'color2':'%COLOR2%',
 	'text':'%TEXT%',
+	'drawx':0,
+	'drawy':0,
 };
 
 function mod(a,b) {
@@ -62,6 +69,66 @@ function makeColor(img, event, name) {
 	document.getElementById(name).value = "#"+s;
 	setProgram();
 }
+
+// from https://www.chestysoft.com/imagefile/javascript/get-coordinates.asp
+function findPosition(oElement)
+{
+  if(typeof( oElement.offsetParent ) != "undefined")
+  {
+    for(var posX = 0, posY = 0; oElement; oElement = oElement.offsetParent)
+    {
+      posX += oElement.offsetLeft;
+      posY += oElement.offsetTop;
+    }
+      return [ posX, posY ];
+    }
+    else
+    {
+      return [ oElement.x, oElement.y ];
+    }
+}
+
+function handleMove(evt) {
+	evt.preventDefault();
+	var touches = evt.changedTouches;
+	var isCool = true;
+	var padcoords = findPosition(document.getElementById("treebg"));
+
+	if (touches) {
+		state.drawx = touches[0].pageX-padcoords[0];
+		state.drawy = touches[0].pageY-padcoords[1];
+		//document.getElementById("console").innerHTML = "Touch to "+state.drawx+", "+state.drawy+"  padcoords = "+padcoords[0]+", "+padcoords[1];
+		if (state.drawx>0 && state.drawx<400 && state.drawy>0 && state.drawy<400) {
+			
+			setProgram();
+		}
+	} else {
+		isCool = (event.buttons!=0);
+		state.drawx = event.clientX - padcoords[0];
+		state.drawy = event.clientY - padcoords[1];
+		if (isCool) {
+			//document.getElementById("console").innerHTML = "Mouse to "+state.drawx+", "+state.drawy+"  padcoords = "+padcoords[0]+", "+padcoords[1];
+			if (state.drawx>0 && state.drawx<400 && state.drawy>0 && state.drawy<400) {
+				setProgram();
+			}
+		}
+	}
+	state.drawx = 0;
+	state.drawy = 0;
+
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+		console.log("Init!");
+		var pad = document.getElementById("treebg");
+		pad.addEventListener("touchmove", handleMove, true);
+		pad.addEventListener("mousemove", handleMove, true);
+		pad.addEventListener("dragstart", handleMove, true);
+		pad.addEventListener("dragmove", handleMove, true);
+		pad.addEventListener("dragend", handleMove, true);
+		pad.addEventListener("click", handleMove, true);
+});
+
 
 	</script>
 	<h1><img src="techlab.png"></h1>
@@ -92,6 +159,13 @@ function makeColor(img, event, name) {
     <label for="color2">Color 2</label>
   </div>
   <div class="status" id="status"></div>
+  <div class="drawingpad">
+	  <img src="treebg.png" id="treebg" width="400px" height="400px">
+  </div>
+  <div id="console">
+
+  </div>
+
 </body>
 </html>
 
