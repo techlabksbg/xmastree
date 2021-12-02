@@ -210,6 +210,11 @@ void WebServer::setupHTTP() {
     request->send(SPIFFS, "/techlab.png", "image/png");
   });
 
+  // Route to load treebg.png file
+  server->on("/treebg.png", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(SPIFFS, "/treebg.png", "image/png");
+  });
+
   // Route to load favicon.ico file
   server->on("/favicon.ico", HTTP_GET, [](AsyncWebServerRequest *request){
     request->send(SPIFFS, "/favicon.ico", "image/x-icon");
@@ -303,6 +308,21 @@ void WebServer::setupHTTP() {
         params.newProgram = p;
         status += " program=";
         status += params.newProgram;
+      }
+    }
+    if(request->hasParam("drawx")) {
+      params.drawx = request->getParam("drawx")->value().toInt();
+      if(request->hasParam("drawx")) {
+        params.drawy = request->getParam("drawy")->value().toInt();
+      }
+      int drawId = params.getAppId("Drawing");
+      if (params.drawx || params.drawy) {
+        if (drawId>=0) {
+          params.newProgram = drawId;
+          status += params.drawx;
+          status += ", ";
+          status += params.drawy;
+        }
       }
     }
     if (request->hasParam("text")) {
