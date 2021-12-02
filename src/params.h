@@ -17,7 +17,7 @@
 #define SPI_MISO      19
 #define SPI_SCK       18
 
-//#define WIFIDEBUG
+#define WIFIDEBUG
 
 #ifdef WIFIDEBUG
 #include "WiFi.h"
@@ -40,6 +40,8 @@ struct Params {
     int brightness = 255;
     int speed = 200;
     int singlePixel = -1;
+    int drawx = 0;
+    int drawy = 0;
     bool isAutoRunning = false;
     unsigned long lastCmd = 0;
     uint32_t color1 = 0xff0000;
@@ -55,34 +57,9 @@ struct Params {
     std::vector<float> mins = std::vector<float> (3, 500);
     std::vector<float> maxs = std::vector<float> (3, -500);
     
-    void readPosData() {
-        File f = SPIFFS.open("/posdata.txt", FILE_READ);
-        if (f) {
-            for (int i=0; i<NUMPIXEL; i++) {
-                for (int k=0; k<3; k++) {
-                    posdata[i][k] = f.parseFloat();
-                    if (posdata[i][k] > maxs[k]){
-                        maxs[k] = posdata[i][k];
-                    }
-                    if (posdata[i][k] < mins[k]){
-                        mins[k] = posdata[i][k];
-                    }
-                    
-                }
-            }
-            f.close();
-        }
-    }
-
-    void begin() {
-        // NeoPixels
-#ifdef WIFIDEBUG        
-        pixels = new MyNeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
-#else
-        pixels = new Adafruit_NeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
-#endif
-        readPosData();
-    }
+    void readPosData();
+    void begin();
+    int getAppId(const char* name);
 
 };
 
