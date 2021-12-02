@@ -14,7 +14,10 @@
    version="1.1"
    id="svg8"
    inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
-   sodipodi:docname="techlab-makerspace.svg">
+   sodipodi:docname="techlab-makerspace.svg"
+   inkscape:export-filename="/home/ivo/burggraben/informatik/labor/xmastree/xmastree/other/bitmap-mapping/techlab.png"
+   inkscape:export-xdpi="36.73016"
+   inkscape:export-ydpi="36.73016">
   <defs
      id="defs2">
     <linearGradient
@@ -756,9 +759,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.35"
-     inkscape:cx="855.32525"
-     inkscape:cy="949.24165"
+     inkscape:zoom="0.24748737"
+     inkscape:cx="651.46656"
+     inkscape:cy="872.98564"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      inkscape:document-rotation="0"
