@@ -17,7 +17,7 @@
 #define SPI_MISO      19
 #define SPI_SCK       18
 
-#define WIFIDEBUG
+//#define WIFIDEBUG
 
 #ifdef WIFIDEBUG
 #include "WiFi.h"
