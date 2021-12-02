@@ -3,6 +3,7 @@ import http.client
 from time import sleep
 import numpy as np
 from datetime import datetime
+import math
 
 NUMLEDS = 500
 
@@ -12,8 +13,16 @@ NUMLEDS = 500
 # campos = np.mat([[-40,250,87]]).transpose() # Hinter balken
 # campos = np.mat([[165, 197,118]]).transpose()
 # campos = np.mat([[227,93,86]]).transpose()
-#campos = np.mat([[-68,210,65]]).transpose() # Hinter balken
-campos = np.mat([[237,24,65]]).transpose() # Hinter balken
+a = -76
+b = 220
+w = -math.pi/4
+print(w)
+x = a*math.cos(w)-b*math.sin(w)
+y = a*math.sin(w)+b*math.cos(w)
+print(x,y)
+campos = np.mat([[x,y,62]]).transpose() # Hinter balken
+
+#campos = np.mat([[237,24,65]]).transpose() # Hinter balken
 
 
 # Matrix to get space coordinates
