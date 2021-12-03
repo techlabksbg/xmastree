@@ -28,9 +28,9 @@ void Stars::loop() {
     /* if (i==0 && r!=0) {
         Serial.printf("r=%d, g=%d, b=%d, color1=%06x, v=%f\n", r,g,b, color1, v);      
         } */
-        params.pixels->setPixelColor(i, params.pixels->Color(r,g,b));
+        params.pixels->SetPixelColor(i, RgbColor(r,g,b));
     }
-    params.pixels->show();
+    params.pixels->Show();
 }
 
 // Instantiate (this will also register it into params)

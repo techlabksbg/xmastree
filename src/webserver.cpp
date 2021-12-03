@@ -225,9 +225,9 @@ void WebServer::setupHTTP() {
     String status = String("Status: ");
     if(request->hasParam("led")) {
       int led = atoi(request->getParam("led")->value().c_str());
-      params.pixels->clear();
+      params.pixels->ClearTo(RgbColor(0,0,0));
       if (led>=0 && led<NUMPIXEL) {
-        params.pixels->setPixelColor(led, 255,255,255);
+        params.pixels->SetPixelColor(led, RgbColor(255,255,255));
         status += " Pixel ";
         status += led;
         status += "set.";
@@ -236,7 +236,7 @@ void WebServer::setupHTTP() {
         params.singlePixel = -1;
         status += " all clear.";
       }
-      params.pixels->show();
+      params.pixels->Show();
       if (params.activeProgram!=-1) {
         params.newProgram = -1;
       }
@@ -259,7 +259,7 @@ void WebServer::setupHTTP() {
       b = (b<0 ? 0 : (b>255 ? 255 : b));
       if (b!=params.brightness) {
         params.brightness = b;
-        params.pixels->setBrightness(params.brightness);
+        //params.pixels->setBrightness(params.brightness);
         Serial.printf("Brightness=%d\n", params.brightness);
         status += "Brightness=";
         status += params.brightness;

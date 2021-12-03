@@ -26,9 +26,9 @@ void Fade::loop() {
     float w = cos(t*2*PI)/2+0.5;
     int c = mix(w);
     for (int i=0; i<NUMPIXEL; i++) {
-        params.pixels->setPixelColor(i,c);
+        params.pixels->SetPixelColor(i,c);
     }
-    params.pixels->show();
+    params.pixels->Show();
 }
 
 

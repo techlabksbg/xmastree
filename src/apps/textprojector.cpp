@@ -212,14 +212,14 @@ void TextProjector::loop(){
     if (secs() > lassec + 0.001){
         shiftin();
         for (int pixel = 0; pixel < NUMPIXEL; pixel++){
-            params.pixels->setPixelColor(pixel, 0);
+            params.pixels->SetPixelColor(pixel, 0);
             if (finals[pixel].second > 0 && finals[pixel].second < 256 && finals[pixel].first < width){
                 if (on[finals[pixel].first*256+finals[pixel].second]){
-                    params.pixels->setPixelColor(pixel, 0xFFFFFF);
+                    params.pixels->SetPixelColor(pixel, 0xFFFFFF);
                 }
             }
         }
-        params.pixels->show();
+        params.pixels->Show();
         lassec = secs();
     }
 }

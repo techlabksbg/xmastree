@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include <vector>
-#include <Adafruit_NeoPixel.h>
+#include <NeoPixelBus.h>
 #include "SPIFFS.h"
 #include "app.h"
 #include "SD.h"
@@ -10,6 +10,8 @@
 
 #define PIN 13
 #define NUMPIXEL 500
+// See https://github.com/Makuna/NeoPixelBus/wiki/ESP32-NeoMethods
+#define PIXELCONFIG NeoPixelBus<NeoRgbFeature, Neo800KbpsMethod>
 
 // Pins for SD-Card
 #define SD_CS          5
@@ -52,7 +54,8 @@ struct Params {
 #ifdef WIFIDEBUG
     MyNeoPixel* pixels;
 #else
-    Adafruit_NeoPixel* pixels;
+    //Adafruit_NeoPixel* pixels;
+    PIXELCONFIG* pixels;// strip(PixelCount, PixelPin);
 #endif
     std::vector<float> mins = std::vector<float> (3, 500);
     std::vector<float> maxs = std::vector<float> (3, -500);

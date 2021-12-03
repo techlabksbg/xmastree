@@ -28,7 +28,7 @@ class Jumping::Jumper {
     float t0;
     float tmul = 1.0;
     float* ctrlPoints;
-    int color;
+    RgbColor color;
     Jumper(float t) : t0(t) {
         ctrlPoints = new float[9];
         float w = 2*PI*random(1000)/1000.0;
@@ -48,19 +48,22 @@ class Jumping::Jumper {
         float ttot = 2*sqrt(2*h/100.0/9.81);
         tmul = 1/ttot;
         //Serial.printf("New Jumper with ttot=%.3f and tmul=%.3f\n", ttot, tmul);
-        color = params.pixels->ColorHSV(random(0xffff),255,127);
+        color = RgbColor(HslColor(random(0xffff)/65535.0f,1.0f,0.5f));
     }
     ~Jumper() {
         delete[] ctrlPoints;
     }
-    int getColor(float t, float* led) {
+    RgbColor getColor(float t, float* led) {
         float p[3];
         bezier2(p,(t-t0)*tmul,ctrlPoints);
         float d = vec_dist(p,led);
         if (d<15) {
             return color;
         }
-        return scale(pow(0.5,(d-15)/2),color);
+        int darkenBy = 255-pow(0.5,(d-15)/4)*255;
+        RgbColor c = color;
+        c.Darken(darkenBy);
+        return c;
     }
     bool done(float t) {
         return (t-t0)*tmul>=1.0;
@@ -87,11 +90,14 @@ void Jumping::loop() {
     }
     //unsigned long start = micros(); Takes ages !?!?
     for (int i=0; i<NUMPIXEL; i++) {
-        int color = 0;
+        RgbColor color(0,0,0);
         for(auto const& jumper: jumpers) {
-            color = color_add(color, jumper->getColor(t, params.posdata[i]));
+            RgbColor c = jumper->getColor(t, params.posdata[i]);
+            color.R = ((int)color.R+c.R)>255 ?  255 : color.R+c.R;
+            color.G = ((int)color.G+c.G)>255 ?  255 : color.G+c.G;
+            color.B = ((int)color.B+c.B)>255 ?  255 : color.B+c.B;
         }
-        params.pixels->setPixelColor(i, color);
+        params.pixels->SetPixelColor(i, color);
     }
     //start = micros()-start;
     //Serial.printf("Jumping rendering: %ld us\n",start);
@@ -104,7 +110,7 @@ void Jumping::loop() {
             it++;
         }
     }
-    params.pixels->show();
+    params.pixels->Show();
 }
 
 

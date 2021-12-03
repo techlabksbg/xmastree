@@ -50,9 +50,9 @@ void Whirl::loop() {
         } else {
             l = pow(ball/l,3);
         }
-        params.pixels->setPixelColor(i, scale(l, mix(t)));
+        params.pixels->SetPixelColor(i, scale(l, mix(t)));
     }
-    params.pixels->show();
+    params.pixels->Show();
 }
 
 

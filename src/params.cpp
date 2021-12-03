@@ -7,7 +7,8 @@ void Params::begin() {
 #ifdef WIFIDEBUG        
     pixels = new MyNeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
 #else
-    pixels = new Adafruit_NeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
+    //pixels = new Adafruit_NeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
+    pixels = new PIXELCONFIG(NUMPIXEL, PIN);
 #endif
     readPosData();
 }

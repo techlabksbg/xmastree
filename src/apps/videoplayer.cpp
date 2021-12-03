@@ -146,9 +146,9 @@ void VideoPlayer::loop() {
                     color = scale(*pt/255.0, params.color1);
                 }
             } 
-            params.pixels->setPixelColor(i,color);
+            params.pixels->SetPixelColor(i,color);
         }
-        params.pixels->show();
+        params.pixels->Show();
         if (! bitmap.available()) {
             stop();
         }
