@@ -20,19 +20,19 @@
 #define SPI_MISO      19
 #define SPI_SCK       18
 
-//#define WIFIDEBUG
+#define WIFIDEBUG
 
 #ifdef WIFIDEBUG
 #include "WiFi.h"
-class MyNeoPixel : public Adafruit_NeoPixel {
+class MyNeoPixel : public PIXELCONFIG {
     public:
     byte* buffer;
     byte* colorData;
-    MyNeoPixel(uint16_t n, int16_t pin = (int16_t)6, neoPixelType type = (neoPixelType)82U);
+    MyNeoPixel(uint16_t n, int16_t pin);
 
     WiFiUDP udp;
 
-    void show();
+    void Show();
 };
 
 #endif
