@@ -13,13 +13,11 @@ class TextProjector : App {
     virtual void loop();
     virtual const char* buttonName() { return "Display Text"; };
     virtual bool loopFast() { return true; };
-    virtual void stop();
     void updatetext();
     void shiftin();
     vector<float> projectedcoords [NUMPIXEL];
     pair<int, int> finals [NUMPIXEL];
-    // what does that mean?
-    float projectto [3] = {5000, 5000, 150};
+    float projectto [3] = {0,1500,100};
     float vectocen [3] = {-projectto[0], -projectto[1], 100 - projectto[2]};
     float xproj [3];
     float yproj [3];
@@ -28,7 +26,7 @@ class TextProjector : App {
     float maxprop = 0.95;
     float multpfac;
     String towrite = "HALLO";
-    bool *on  = nullptr;
+    bool *on = nullptr;
     bool inited = false;
     int padding = 30;
     int tonex = 200;
@@ -36,21 +34,12 @@ class TextProjector : App {
     int botx;
     int imind;
     int imheight;
+    int maxheight = 100;
     float lassec = 100000;
     File filee;
     vector<int> indx;
     vector<int> widths;
 };
-
-void TextProjector::stop() {
-    if (filee) {
-        filee.close();
-    }
-    if (on!=nullptr) {
-        delete[] on;
-        on = nullptr;
-    }
-}
 
 void TextProjector::shiftin(){
     if (botx + width> widths[imind]){
@@ -64,28 +53,28 @@ void TextProjector::shiftin(){
         filee.parseInt();
         imheight = filee.parseInt();
     }
-    memmove(on, on + 256, 256*sizeof(bool)*(width-1));
+    memmove(on, on + maxheight,  maxheight*sizeof(bool)*(width-1));
     if (botx + width > 0 && botx + width < widths[imind] - padding){
         for (int yreader = 0; yreader < imheight; yreader++){
             if (filee){
                 int data = filee.parseInt();
-                on[(width - 1) * 256 + yreader] = false;
+                on[(width - 1) * maxheight + yreader] = false;
                 if (data == 1){
-                    on[(width - 1) * 256 + yreader] = true;
+                    on[(width - 1) * maxheight + yreader] = true;
                 }
             }
             else{
-                on[(width - 1) * 256 + yreader] = false;
+                on[(width - 1) * maxheight + yreader] = false;
             }
         }
-        for (int zeroer = imheight; zeroer < 256; zeroer++){
-            on[(width - 1) * 256 + zeroer] = false;
+        for (int zeroer = imheight; zeroer < maxheight; zeroer++){
+            on[(width - 1) * maxheight + zeroer] = false;
         }
         
     }
     else{
-        for (int yreader = 0; yreader < 256; yreader++){
-            on[(width - 1) * 256 + yreader] = false;
+        for (int yreader = 0; yreader < maxheight; yreader++){
+            on[(width - 1) * maxheight + yreader] = false;
         }
     }
     botx++;
@@ -97,14 +86,11 @@ void TextProjector::updatetext(){
     int len = 0;
     for (int charc = 0; charc < towrite.length(); charc++){
         int ind = 0;
-        while (ind < charcs.size() && charcs[ind] != towrite[charc]){
+        while (ind < charcs.size() && charcs[ind] != towrite[charc]){// && toLowerCase(charcs[ind]) != towrite[charc]){
             ind += 1;
         }
-        if (charcs[ind] == towrite[charc]){
+        if (charcs[ind] == towrite[charc] || toLowerCase(charcs[ind]) == towrite[charc]){
             String bas = "/letters/";
-            if (filee) {
-                filee.close();
-            }
             filee = SD.open(bas + ind + ".txt", FILE_READ);
             int widthy = filee.parseInt();
             len += widthy + padding;
@@ -112,19 +98,18 @@ void TextProjector::updatetext(){
             indx.push_back(ind);
         }
     }
-    if (on == nullptr) {
-        on = new bool [width*256];
+
+    if  (on != nullptr){
+        delete[] on;
     }
-    for (int zeroer = 0; zeroer < width*256; zeroer++){
+    on = new bool [width*maxheight];
+    for (int zeroer = 0; zeroer < width*maxheight; zeroer++){
         on[zeroer] = false;
     }
 
     botx = -1*width;
     imind = 0;
     String bas = "/letters/";
-    if (filee) {
-        filee.close();
-    }
     filee = SD.open(bas + indx[0] + ".txt", FILE_READ);
     filee.parseInt();
     imheight = filee.parseInt();
@@ -132,6 +117,12 @@ void TextProjector::updatetext(){
 
 void TextProjector::loop(){
     if (!inited){
+        Serial.println(params.mins[0]);
+        Serial.println(params.mins[1]);
+        Serial.println(params.mins[2]);
+        Serial.println(params.maxs[0]);
+        Serial.println(params.maxs[1]);
+        Serial.println(params.maxs[2]);
         inited = true;
         float lto = sqrt(vectocen[0]*vectocen[0] + vectocen[1]*vectocen[1] + vectocen[2]*vectocen[2]);
         vectocen[0] /= lto;
@@ -150,7 +141,18 @@ void TextProjector::loop(){
         xproj[0] /= lx;
         xproj[1] /= lx;
         xproj[2] /= lx;
+        if (xproj[0] > 0){
+            xproj[0] *= -1;
+            xproj[1] *= -1;
+            xproj[2] *= -1;
+        }
         vec_cross(yproj, xproj, vectocen);
+        if (yproj[2] < 0){
+            yproj[0] *= -1;
+            yproj[1] *= -1;
+            yproj[2] *= -1;
+        }
+
         dd = -projectto[0]*vectocen[0]-projectto[1]*vectocen[1]-projectto[2]*vectocen[2];
         dx = -projectto[0]*xproj[0]-projectto[1]*xproj[1]-projectto[2]*xproj[2];
         dy = -projectto[0]*yproj[0]-projectto[1]*yproj[1]-projectto[2]*yproj[2];
@@ -193,7 +195,7 @@ void TextProjector::loop(){
                 }
             }
         }
-        multpfac = 256/(maxprop - minprop)/(ymax - ymin);
+        multpfac = maxheight/(maxprop - minprop)/(ymax - ymin);
         for (int finaler = 0; finaler < NUMPIXEL; finaler++){
             if(projectedcoords[finaler][0] == 1){
                 int x = (projectedcoords[finaler][1] - xmin)*multpfac;
@@ -213,8 +215,8 @@ void TextProjector::loop(){
         shiftin();
         for (int pixel = 0; pixel < NUMPIXEL; pixel++){
             params.pixels->setPixelColor(pixel, 0);
-            if (finals[pixel].second > 0 && finals[pixel].second < 256 && finals[pixel].first < width){
-                if (on[finals[pixel].first*256+finals[pixel].second]){
+            if (finals[pixel].second > 0 && finals[pixel].second < maxheight && finals[pixel].first < width){
+                if (on[finals[pixel].first*maxheight+finals[pixel].second]){
                     params.pixels->setPixelColor(pixel, 0xFFFFFF);
                 }
             }
