@@ -46,4 +46,4 @@ void Drawing::loop() {
 }
 
 
-//Drawing drawing;
+Drawing drawing;
