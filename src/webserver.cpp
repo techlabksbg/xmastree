@@ -278,7 +278,7 @@ void WebServer::setupHTTP() {
       }
     }
     if(request->hasParam("color1")) {      
-      RgbColor c1 = RgbColor(HtmlColor(request->getParam("color1")->value().toInt()));
+      RgbColor c1 = RgbColor(HtmlColor(strtol(request->getParam("color1")->value().c_str(),0,16)));
       if (c1!=params.color1) {
         params.color1=c1;
         Serial.printf("Color1=%06x\n", HtmlColor(params.color1).Color);
@@ -290,7 +290,7 @@ void WebServer::setupHTTP() {
       }
     }
     if(request->hasParam("color2")) {
-      RgbColor c2 = RgbColor(HtmlColor(request->getParam("color2")->value().toInt()));
+      RgbColor c2 = RgbColor(HtmlColor(strtol(request->getParam("color2")->value().c_str(),0,16)));
       if (c2!=params.color2) {
         params.color2=c2;
         Serial.printf("Color2=%06x\n", HtmlColor(params.color2).Color);

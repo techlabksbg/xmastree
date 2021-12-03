@@ -38,7 +38,7 @@ RgbColor color_add(RgbColor c1, RgbColor c2);
  * @param color Color to be scaled
  * @return int Scaled color
  */
-int scale(float f, RgbColor color);
+RgbColor scale(float f, RgbColor color);
 
 /**
  * @brief Copies a vector from src to dest

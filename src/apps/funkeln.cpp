@@ -45,6 +45,7 @@ void Funkeln::loop() {
         for (int i=0; i<NUMFUNK; i++) {
             pos[i] = random(NUMPIXEL);
             colors[i] = mix(random(10001)/10000.0);
+            Serial.printf("mix to %0x\n", HtmlColor(colors[i]).Color);
             //Serial.printf("colors[%d]=%06x\n",i,colors[i]);
             count[i] = 0;
             len[i] = (70+random(60))*((255-params.speed)+20)/120.0;
@@ -55,7 +56,7 @@ void Funkeln::loop() {
             float t = ((float)count[i])/len[i];
             t = t<0.5 ? 2.0*t : 2.0-2*t;
             t = pow(t,4);
-            int c = scale(t,colors[i]);
+            RgbColor c = scale(t,colors[i]);
             /*if (i==0) {
                 Serial.printf("count=%d, len=%d, t=%f, colors[0]=%06x, c=%06x\n", count[i], len[i], t, colors[i], c);
             }*/
