@@ -80,9 +80,9 @@ void WireFrame::loop() {
         float hue = fmod(best/6.0,1.0);
         // 8cm tubes
         if (d<10.0) {
-            uint8_t v = 1.0;
+            float v = 0.5;
             if (d>6.0) {
-                v = (10-d)/4.0;
+                v = (10-d)/8.0;
             }
             params.pixels->SetPixelColor(led, HslColor(hue, 1.0f, v));
         } else {

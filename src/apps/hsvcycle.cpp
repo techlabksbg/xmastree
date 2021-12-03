@@ -19,7 +19,7 @@ void HSVCycle::loop() {
     float t = secs()/fmap(params.speed, 0, 255, 20, 1.0);
     for (int i=0; i<NUMPIXEL; i++) {
         float h = fmod(((float)i)/NUMPIXEL+t,1.0);
-        params.pixels->SetPixelColor(i, HslColor(h,1.0f,1.0f));
+        params.pixels->SetPixelColor(i, HslColor(h,1.0f,0.5f));
     }
     params.pixels->Show();
 }

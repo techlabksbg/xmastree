@@ -39,8 +39,8 @@ void RainSphere::loop() {
             l+=d*d;
         }
         l = sqrt(l);
-        int hue = fmod(l/100.0+(1-t),1.0);
-        params.pixels->SetPixelColor(i, HslColor(hue,1.0f,1.0f));
+        float hue = fmod(l/100.0+(1-t),1.0);
+        params.pixels->SetPixelColor(i, HslColor(hue,1.0f,0.5f));
     }
     params.pixels->Show();
 }
