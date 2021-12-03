@@ -4,18 +4,11 @@ float fmap(float v, float fromMin, float fromMax, float toMin, float toMax) {
   return (v-fromMin)*(toMax-toMin)/(fromMax-fromMin)+toMin;
 }
 
-int color_mix(float t, int col1, int col2) {
-  int r = 0;
-  for (int i=0; i<3; i++) {
-    int c1 = col1 & (0xff << (8*i));
-    int c2 = col2 & (0xff << (8*i));
-    int c3 = (1.0-t)*c1+t*c2;
-    r += c3 & (0xff<<(8*i));
-  } 
-  return r;
+RgbColor color_mix(float t, RgbColor col1, RgbColor col2) {
+  return RgbColor::LinearBlend(col1, col2, t);
 }
 
-int mix(float f) {
+RgbColor mix(float f) {
   return color_mix(f, params.color1, params.color2);
 }
 
@@ -41,12 +34,13 @@ int color_add(int col1, int col2) {
   return r;
 }
 
-int scale(float f, int color) {
-  int r = 0;
-  for (int i=0; i<3; i++) {
-    r |= ((int)(f*(color & (0xff<<(8*i))))) & (0xff<<(8*i));
+RgbColor scale(float f, RgbColor color) {
+  if (f<1.0) {
+    color.Darken(255-f*255);
+    return color;
   }
-  return r;
+  color.Lighten((f-1)*255);
+  return color;
 }
 
 

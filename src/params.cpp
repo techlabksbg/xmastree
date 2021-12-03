@@ -2,14 +2,17 @@
 
 #include <WiFiUdp.h>
 
+PIXELCONFIG globalPixels(NUMPIXEL, PIN);
+
 void Params::begin() {
     // NeoPixels
 #ifdef WIFIDEBUG        
     pixels = new MyNeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
 #else
     //pixels = new Adafruit_NeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
-    pixels = new PIXELCONFIG(NUMPIXEL, PIN);
+    pixels = &globalPixels;
 #endif
+    pixels->Begin();
     readPosData();
 }
 

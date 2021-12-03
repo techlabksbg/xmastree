@@ -134,16 +134,17 @@ void VideoPlayer::loop() {
             Serial.println();
         }}*/
         for (int i=0; i<NUMPIXEL; i++) {
-            uint32_t color = 0;
+            RgbColor color = {0,0,0};
             vec_rotxy(led, params.posdata[i], -angle);
             int x = (led[1]+xoff)*mul;
             int y = (fileHeader.frameheight-(led[2]+zoff)*mul);
             if (x>=0 && y>=0 && x<fileHeader.framewidth && y<fileHeader.frameheight) {
                 char* pt = framedata+y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp;
                 if (fileHeader.bpp==3) {
-                    color = (*pt) | (*(pt+1) << 8) | (*(pt+2) << 16);
+                    color = {(*pt), *(pt+1), *(pt+2)};
                 } else {
-                    color = scale(*pt/255.0, params.color1);
+                    color = params.color1;
+                    color.Darken(255-*pt);
                 }
             } 
             params.pixels->SetPixelColor(i,color);

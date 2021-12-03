@@ -16,12 +16,12 @@ bool MovingPlane::setGoodParams() {
     params.brightness = 50;
     switch (p) {
     case 0:
-        params.color1 = 0x1111ff;
-        params.color2 = 0xff2266;
+        params.color1 = {17,17,255};
+        params.color2 = {255,34,102};
         break;
     case 1:
-        params.color1 = 0xff0000;
-        params.color2 = 0x00ff00;
+        params.color1 = {255,0,0};
+        params.color2 = {0,255,0};
         params.speed = 100;
         break;
 

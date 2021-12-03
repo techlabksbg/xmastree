@@ -12,6 +12,8 @@ void setup(){
     // Serial port for debugging purposes
     Serial.begin(115200);
 
+    
+
 
     // Initialize SPIFFS
     if(!SPIFFS.begin(true)){

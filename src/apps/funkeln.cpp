@@ -15,13 +15,13 @@ bool Funkeln::setGoodParams() {
     static int p = 0;
     switch (p) {
     case 0:
-        params.color1 = 0x1111ff;
-        params.color2 = 0xff2266;
+        params.color1 = {17,17,255};
+        params.color2 = {255, 34, 100};
         params.speed = 100;
         break;
     case 1:
-        params.color1 = 0xff0000;
-        params.color2 = 0x00ff00;
+        params.color1 = {255,0,0};
+        params.color2 = {0,255,0};
         params.speed = 200;
         break;
 
@@ -32,7 +32,7 @@ bool Funkeln::setGoodParams() {
 
 void Funkeln::loop() {
     static int pos[NUMFUNK];
-    static int colors[NUMFUNK];
+    static RgbColor colors[NUMFUNK];
     static int count[NUMFUNK];
     static int len[NUMFUNK];
 

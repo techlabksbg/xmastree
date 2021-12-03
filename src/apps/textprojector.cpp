@@ -215,7 +215,7 @@ void TextProjector::loop(){
             params.pixels->SetPixelColor(pixel, 0);
             if (finals[pixel].second > 0 && finals[pixel].second < 256 && finals[pixel].first < width){
                 if (on[finals[pixel].first*256+finals[pixel].second]){
-                    params.pixels->SetPixelColor(pixel, 0xFFFFFF);
+                    params.pixels->SetPixelColor(pixel, RgbColor(255,255,255));
                 }
             }
         }
