@@ -16,7 +16,7 @@ try:
     server_address = ('192.168.42.2', 10000)
     print('starting up on %s port %s' % server_address)
     sock.bind(server_address)
-    size = width, height = 800,800 
+    size = width, height = 800, 800
     screen = pygame.display.set_mode(size)
     
     
@@ -50,6 +50,9 @@ try:
             pygame.draw.circle(screen, (colorData[l*3], colorData[l*3+1], colorData[l*3+2]), (p.comp[0], 800-p.comp[1]),4,2)
 
         pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit()
         # Shift data
         colorData = colorData[(3*NUMLEDS):]
 
