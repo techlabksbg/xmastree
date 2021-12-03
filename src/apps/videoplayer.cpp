@@ -61,7 +61,7 @@ void VideoPlayer::getFileNames() {
 bool VideoPlayer::setGoodParams() {
     params.speed = 250;
     params.brightness = 255;
-    return false;
+    return true;
 }
 
 void VideoPlayer::stop() {
