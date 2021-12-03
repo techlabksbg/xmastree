@@ -23,7 +23,7 @@ void Drawing::loop() {
                 if (xx<r) {
                     xx = xx*xx+zz*zz;
                     if (xx<r*r) {
-                        params.pixels->setPixelColor(i, params.color1);
+                        params.pixels->SetPixelColor(i, params.color1);
                     }
                 }
             }
@@ -36,16 +36,13 @@ void Drawing::loop() {
     };
     // Fade (subtract one from each channel value)
     for (int i=0; i<NUMPIXEL; i++) {
-        int color = params.pixels->getPixelColor(i);
-        if (color) {
-            RGB* c = (RGB*)&color;
-            if (c->r) c->r--;
-            if (c->g) c->g--;
-            if (c->b) c->b--;
-            params.pixels->setPixelColor(i, color);
-        }
-    }
-    params.pixels->show();
+        RgbColor color = params.pixels->GetPixelColor(i);
+        if (color.R) color.R--;
+        if (color.G) color.G--;
+        if (color.B) color.B--;
+        params.pixels->SetPixelColor(i, color);
+   }
+    params.pixels->Show();
 }
 
 

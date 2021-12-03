@@ -2,13 +2,16 @@
 
 #include <WiFiUdp.h>
 
+
+
 void Params::begin() {
     // NeoPixels
 #ifdef WIFIDEBUG        
-    pixels = new MyNeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
+    pixels = new MyNeoPixel(NUMPIXEL, PIN);
 #else
-    pixels = new Adafruit_NeoPixel(NUMPIXEL, PIN, NEO_RGB + NEO_KHZ800);
+    pixels = new PIXELCONFIG(NUMPIXEL, PIN);
 #endif
+    pixels->Begin();
     readPosData();
 }
 
@@ -43,8 +46,8 @@ int Params::getAppId(const char* name) {
 #ifdef WIFIDEBUG
 
 
-MyNeoPixel::MyNeoPixel(uint16_t n, int16_t pin, neoPixelType type) :
-        Adafruit_NeoPixel(n,pin,type) 
+MyNeoPixel::MyNeoPixel(uint16_t n, int16_t pin) :
+        PIXELCONFIG(n,pin) 
 {
     buffer = new byte[3*NUMPIXEL+6];
     buffer[0] = 'M';
@@ -54,22 +57,21 @@ MyNeoPixel::MyNeoPixel(uint16_t n, int16_t pin, neoPixelType type) :
     buffer[4] = 'C';
     buffer[5] = '0';
     colorData = buffer+6;
-
 }
 
 
 
-void MyNeoPixel::show() {
-    Adafruit_NeoPixel::show();
+void MyNeoPixel::Show() {
+    PIXELCONFIG::Show();
 
     udp.begin(10000);
 
     // get ColorData
     for (int i=0; i<NUMPIXEL; i++) {
-        int c = getPixelColor(i);
-        colorData[i*3] = c >> 16;
-        colorData[i*3+1] = (c>>8) & 0xff;
-        colorData[i*3+2] = c & 0xff;
+        RgbColor c = GetPixelColor(i);
+        colorData[i*3] = c.R;
+        colorData[i*3+1] = c.G;
+        colorData[i*3+2] = c.B;
     }
     // send ColorData
     //Serial.println("Sending MaGiC0 data");

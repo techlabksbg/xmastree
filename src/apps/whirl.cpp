@@ -17,12 +17,12 @@ bool Whirl::setGoodParams() {
     switch (p) {
     case 0:
         params.speed = 240;
-        params.color1 = 0xff0000;
-        params.color2 = 0x0000ff;
+        params.color1 = {255,0,0};
+        params.color2 = {0,0,255};
         break;
     case 1:
-        params.color1 = 0xffff00;
-        params.color2 = 0x0000ff;
+        params.color1 = {255,255,0};
+        params.color2 = {0,0,255};
         params.speed = 230;
         break;
 
@@ -50,9 +50,9 @@ void Whirl::loop() {
         } else {
             l = pow(ball/l,3);
         }
-        params.pixels->setPixelColor(i, scale(l, mix(t)));
+        params.pixels->SetPixelColor(i, scale(l, mix(t)));
     }
-    params.pixels->show();
+    params.pixels->Show();
 }
 
 

@@ -12,6 +12,8 @@ void setup(){
     // Serial port for debugging purposes
     Serial.begin(115200);
 
+    
+
 
     // Initialize SPIFFS
     if(!SPIFFS.begin(true)){
@@ -54,11 +56,11 @@ void loop() {
         fastLoop = (params.activeProgram>=0 && params.apps[params.activeProgram]->loopFast());
         nextStep = millis();
         if (params.activeProgram>=0) {
-            params.pixels->clear();
-            params.pixels->show();
+            params.pixels->ClearTo(RgbColor(0,0,0));
+            params.pixels->Show();
         } else if (params.singlePixel>=0) {
-            params.pixels->clear();
-            params.pixels->setPixelColor(params.singlePixel, 255,255,255);
+            params.pixels->ClearTo(RgbColor(0,0,0));
+            params.pixels->SetPixelColor(params.singlePixel, RgbColor(255,255,255));
         }
         if (params.activeProgram>=0) {
             Serial.printf("Now running %s\n", params.apps[params.activeProgram]->buttonName());

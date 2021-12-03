@@ -38,7 +38,7 @@ class App {
      */
     virtual bool setGoodParams() { return false; }
     /**
-     * @brief Makes the animation. Do not forget to call params.pixels->show() at the end!
+     * @brief Makes the animation. Do not forget to call params.pixels->Show() at the end!
      */
     virtual void loop() = 0;
     /**

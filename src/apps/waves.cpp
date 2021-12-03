@@ -25,10 +25,10 @@ void Wave::loop() {
         float d = sqrt(x*x+y*y);
         float f = sin(-t*6+d/10)*40/(1+d*d/500)+60+sin(t)*20;
         int h = fmod(t/4+d/1000.0,1.0)*0xffff;
-        int v = z<f ? 255 : 0;
-        params.pixels->setPixelColor(i, params.pixels->ColorHSV(h,255,v));
+        float v = z<f ? 0.5f : 0.0f;
+        params.pixels->SetPixelColor(i, HslColor(h,255,v));
     }
-    params.pixels->show();
+    params.pixels->Show();
 }
 
 

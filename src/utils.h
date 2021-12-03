@@ -1,4 +1,4 @@
-
+#include "params.h"
 /**
  * @brief Linear mapping from one interval to another
  * 
@@ -17,7 +17,7 @@ float fmap(float v, float fromMin, float fromMax, float toMin, float toMax);
  * @param f 0 means color1, 1 means color2
  * @return int interpolated color value
  */
-int mix(float f);
+RgbColor mix(float f);
 
 /**
  * @brief Interpolate two colors
@@ -27,9 +27,9 @@ int mix(float f);
  * @param c2 
  * @return int Superpose two colors
  */
-int color_mix(float t, int c1, int c2);
+RgbColor color_mix(float t, int c1, int c2);
 
-int color_add(int c1, int c2);
+RgbColor color_add(RgbColor c1, RgbColor c2);
 
 /**
  * @brief RGB-scaling of a color (basically dimming it)
@@ -38,7 +38,7 @@ int color_add(int c1, int c2);
  * @param color Color to be scaled
  * @return int Scaled color
  */
-int scale(float f, int color);
+int scale(float f, RgbColor color);
 
 /**
  * @brief Copies a vector from src to dest

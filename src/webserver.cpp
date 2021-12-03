@@ -156,12 +156,12 @@ String processor(const String& var) {
   }
   if (var == "COLOR1") {
     char buf[20];
-    sprintf(buf, "%06x", params.color1);
+    sprintf(buf, "%06x", HtmlColor(params.color1).Color);
     return String(buf);
   }
   if (var == "COLOR2") {
     char buf[20];
-    sprintf(buf, "%06x", params.color2);
+    sprintf(buf, "%06x", HtmlColor(params.color2).Color);
     return String(buf);
   }
   if (var == "BUTTONS") {
@@ -225,9 +225,9 @@ void WebServer::setupHTTP() {
     String status = String("Status: ");
     if(request->hasParam("led")) {
       int led = atoi(request->getParam("led")->value().c_str());
-      params.pixels->clear();
+      params.pixels->ClearTo(RgbColor(0,0,0));
       if (led>=0 && led<NUMPIXEL) {
-        params.pixels->setPixelColor(led, 255,255,255);
+        params.pixels->SetPixelColor(led, RgbColor(255,255,255));
         status += " Pixel ";
         status += led;
         status += "set.";
@@ -236,7 +236,7 @@ void WebServer::setupHTTP() {
         params.singlePixel = -1;
         status += " all clear.";
       }
-      params.pixels->show();
+      params.pixels->Show();
       if (params.activeProgram!=-1) {
         params.newProgram = -1;
       }
@@ -259,7 +259,7 @@ void WebServer::setupHTTP() {
       b = (b<0 ? 0 : (b>255 ? 255 : b));
       if (b!=params.brightness) {
         params.brightness = b;
-        params.pixels->setBrightness(params.brightness);
+        //params.pixels->setBrightness(params.brightness);
         Serial.printf("Brightness=%d\n", params.brightness);
         status += "Brightness=";
         status += params.brightness;
@@ -278,24 +278,24 @@ void WebServer::setupHTTP() {
       }
     }
     if(request->hasParam("color1")) {      
-      int c1 = strtol(request->getParam("color1")->value().c_str(), NULL, 16);
+      RgbColor c1 = RgbColor(HtmlColor(request->getParam("color1")->value().toInt()));
       if (c1!=params.color1) {
         params.color1=c1;
-        Serial.printf("Color1=%06x\n", params.color1);
+        Serial.printf("Color1=%06x\n", HtmlColor(params.color1).Color);
         char buf[20];
-        sprintf(buf, "%06x", params.color1);        
+        sprintf(buf, "%06x", HtmlColor(params.color1).Color);        
         status+="color1=";
         status+=buf;
         status+=" &nbsp; ";
       }
     }
     if(request->hasParam("color2")) {
-      int c2 = strtol(request->getParam("color2")->value().c_str(), NULL, 16);
+      RgbColor c2 = RgbColor(HtmlColor(request->getParam("color2")->value().toInt()));
       if (c2!=params.color2) {
         params.color2=c2;
-        Serial.printf("Color2=%06x\n", params.color2);
+        Serial.printf("Color2=%06x\n", HtmlColor(params.color2).Color);
         char buf[20];
-        sprintf(buf, "%06x", params.color2);        
+        sprintf(buf, "%06x", HtmlColor(params.color2).Color);        
         status+="color2=";
         status+=buf;
         status+=" &nbsp; ";

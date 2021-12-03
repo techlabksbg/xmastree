@@ -77,16 +77,16 @@ void WireFrame::loop() {
                 n++;
             }
         }
-        uint16_t hue = fmod(best/6.0,1.0)*0xffff;
+        float hue = fmod(best/6.0,1.0);
         // 8cm tubes
         if (d<10.0) {
-            uint8_t v = 255;
-            if (t>6.0) {
-                v = (10-d)*63;
+            float v = 0.5;
+            if (d>6.0) {
+                v = (10-d)/8.0;
             }
-            params.pixels->setPixelColor(led, params.pixels->ColorHSV(hue, 255, v));
+            params.pixels->SetPixelColor(led, HslColor(hue, 1.0f, v));
         } else {
-            params.pixels->setPixelColor(led, 0);
+            params.pixels->SetPixelColor(led, 0);
         }
         
         /*if (d<15.0) {
@@ -94,7 +94,7 @@ void WireFrame::loop() {
         }*/
     }
     //Serial.printf("0x%llx],\\\n",bits);
-    params.pixels->show();
+    params.pixels->Show();
 }
 
 
