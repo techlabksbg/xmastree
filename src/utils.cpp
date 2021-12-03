@@ -5,7 +5,7 @@ float fmap(float v, float fromMin, float fromMax, float toMin, float toMax) {
 }
 
 RgbColor color_mix(float t, RgbColor col1, RgbColor col2) {
-  RgbColor c = {(1-t)*col1.R+t*col2.R, (1-t)*col1.G+t*col2.G, (1-t)*col1.B+t*col2.B};
+  RgbColor c = {(uint8_t)((1-t)*col1.R+t*col2.R), (uint8_t)((1-t)*col1.G+t*col2.G), (uint8_t)((1-t)*col1.B+t*col2.B)};
   return c;
 }
 
