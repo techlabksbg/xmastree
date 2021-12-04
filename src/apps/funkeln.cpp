@@ -56,6 +56,7 @@ void Funkeln::loop() {
             t = t<0.5 ? 2.0*t : 2.0-2*t;
             t = pow(t,4);
             RgbColor c = scale(t,colors[i]);
+            params.pixels-> SetPixelColor(pos[i], c);
             if (count[i]>=len[i]) {
                 pos[i] = random(NUMPIXEL);
                 colors[i] = mix(random(10001)/10000.0);
