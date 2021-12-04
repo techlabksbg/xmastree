@@ -24,7 +24,7 @@ void Wave::loop() {
         float z = params.posdata[i][2];
         float d = sqrt(x*x+y*y);
         float f = sin(-t*6+d/10)*40/(1+d*d/500)+60+sin(t)*20;
-        int h = fmod(t/4+d/1000.0,1.0)*0xffff;
+        float h = fmod(t/4+d/1000.0,1.0);
         float v = z<f ? 0.5f : 0.0f;
         params.pixels->SetPixelColor(i, HslColor(h,1.0f,v));
     }
