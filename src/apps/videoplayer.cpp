@@ -86,7 +86,7 @@ void VideoPlayer::loop() {
         return;
     }
     if (millis()>nextFrame) {
-        nextFrame = millis()+fmap(params.speed, 0, 255, 200, 4);
+        nextFrame = millis()+fmap(params.speed, 0, 255, 200, 16); // 15ms update time for 500 LEDs
         if (!bitmap) {
             bitmap = SD.open(fileNames[active]);
             if (!bitmap) {
@@ -141,7 +141,7 @@ void VideoPlayer::loop() {
             if (x>=0 && y>=0 && x<fileHeader.framewidth && y<fileHeader.frameheight) {
                 char* pt = framedata+y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp;
                 if (fileHeader.bpp==3) {
-                    color = {(*pt), *(pt+1), *(pt+2)};
+                    color = {(*pt+2), *(pt+1), *(pt)};
                 } else {
                     color = params.color1;
                     color.Darken(255-*pt);
