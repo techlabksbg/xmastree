@@ -33,6 +33,7 @@ class VideoPlayer : App {
     char* framedata=nullptr;
     size_t framesize;
     int framenumber = 0;
+    bool autoplay = true;
 };
 
 // from https://randomnerdtutorials.com/esp32-microsd-card-arduino/
@@ -41,6 +42,7 @@ void VideoPlayer::getFileNames() {
     File vids = SD.open("/vids");
     if (!vids || !vids.isDirectory()) {
         Serial.println("Directory /vids not found on SD-Card!");
+        autoplay = false;
         return;
     }
     File file = vids.openNextFile();
@@ -61,7 +63,7 @@ void VideoPlayer::getFileNames() {
 bool VideoPlayer::setGoodParams() {
     params.speed = 250;
     params.brightness = 255;
-    return true;
+    return autoplay;
 }
 
 void VideoPlayer::stop() {
@@ -74,7 +76,9 @@ void VideoPlayer::stop() {
         framedata = nullptr;
     }
     Serial.println("VideoPlayer::stop()");
-    active = (active+1)%fileNames.capacity();
+    if (fileNames.capacity()>0) {
+        active = (active+1)%fileNames.capacity();
+    }
 }
 
 void VideoPlayer::loop() {
@@ -82,7 +86,10 @@ void VideoPlayer::loop() {
         getFileNames();
     }
     if (fileNames.capacity()==0) {
-        Serial.println("No /vids/*.vid file on SD-Card.");
+        if (autoplay) {
+            Serial.println("No /vids/*.vid file on SD-Card.");
+        }
+        autoplay = false;
         return;
     }
     if (millis()>nextFrame) {
@@ -139,9 +146,9 @@ void VideoPlayer::loop() {
             int x = (led[1]+xoff)*mul;
             int y = (fileHeader.frameheight-(led[2]+zoff)*mul);
             if (x>=0 && y>=0 && x<fileHeader.framewidth && y<fileHeader.frameheight) {
-                char* pt = framedata+y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp;
+                uint8_t* pt = (uint8_t*)framedata+y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp;
                 if (fileHeader.bpp==3) {
-                    color = {(*pt+2), *(pt+1), *(pt)};
+                    color = {*(pt+2), *(pt+1), *(pt)};
                 } else {
                     color = params.color1;
                     color.Darken(255-*pt);
