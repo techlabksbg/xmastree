@@ -51,6 +51,7 @@ struct Params {
     RgbColor color2 = RgbColor(0,0,255);
     String text = "TECHLAB";
     float posdata[NUMPIXEL][3];
+    uint16_t nbrs[NUMPIXEL][8]; // Ein Nachbar pro Oktant
     std::vector<App*> apps;
 #ifdef WIFIDEBUG
     MyNeoPixel* pixels;
@@ -62,6 +63,7 @@ struct Params {
     std::vector<float> maxs = std::vector<float> (3, -500);
     
     void readPosData();
+    void computeNbrs(); // compute neighbors
     void begin();
     int getAppId(const char* name);
 

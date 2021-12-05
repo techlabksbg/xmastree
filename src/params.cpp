@@ -1,4 +1,5 @@
 #include "params.h"
+#include "utils.h"
 
 #include <WiFiUdp.h>
 
@@ -41,6 +42,19 @@ int Params::getAppId(const char* name) {
         }
     }
     return -1;
+}
+
+// Idee: nächste LED in jedem Oktanten!
+void Params::computeNbrs() {
+    for (int i=0; i<NUMPIXEL; i++) {
+        for (int k=0; k<8; k++) {
+            nbrs[i][k] = -1;
+        }
+        for (int j=0; j<NUMPIXEL; j++) {
+            // Oktant berechnen
+            float dist = vec_dist2(posdata[i], posdata[j]);
+        }
+    }
 }
 
 #ifdef WIFIDEBUG
