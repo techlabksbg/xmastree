@@ -51,7 +51,7 @@ struct Params {
     RgbColor color2 = RgbColor(0,0,255);
     String text = "TECHLAB";
     float posdata[NUMPIXEL][3];
-    uint16_t nbrs[NUMPIXEL][8]; // Ein Nachbar pro Oktant
+    uint16_t nbrs[NUMPIXEL][6]; // Ein Nachbar pro Sextant
     std::vector<App*> apps;
 #ifdef WIFIDEBUG
     MyNeoPixel* pixels;

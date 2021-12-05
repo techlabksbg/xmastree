@@ -14,6 +14,7 @@ void Params::begin() {
 #endif
     pixels->Begin();
     readPosData();
+    computeNbrs();
 }
 
 void Params::readPosData() {
@@ -32,6 +33,8 @@ void Params::readPosData() {
             }
         }
         f.close();
+    } else {
+        Serial.println("Could not read position data! Store it on SPIFFS at posdata.txt");
     }
 }
 
@@ -46,13 +49,18 @@ int Params::getAppId(const char* name) {
 
 // Idee: nächste LED in jedem Oktanten!
 void Params::computeNbrs() {
+    Serial.println("Computing neighbors");
     for (int i=0; i<NUMPIXEL; i++) {
-        for (int k=0; k<8; k++) {
-            nbrs[i][k] = -1;
+        for (int k=0; k<6; k++) {  // no neighbor in this direction
+            nbrs[i][k] = 0xffff;
         }
         for (int j=0; j<NUMPIXEL; j++) {
-            // Oktant berechnen
-            float dist = vec_dist2(posdata[i], posdata[j]);
+            if (i!=j) {                
+                int sextant = vec_sextant(params.posdata[i], params.posdata[j]);
+                if (nbrs[i][sextant]==0xffff || abs(params.posdata[i][sextant/2]-params.posdata[j][sextant/2]) < abs(params.posdata[i][sextant/2]-params.posdata[nbrs[i][sextant]][sextant/2])) {
+                    nbrs[i][sextant] = j;
+                }
+            }
         }
     }
 }

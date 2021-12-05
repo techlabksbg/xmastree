@@ -217,3 +217,40 @@ float* bezier2(float* dst, float t, float* pts) {
     }
     return dst;
 }
+
+
+/**
+ * @brief computes vector end-start
+ * 
+ * @param dst 
+ * @param start 
+ * @param end 
+ * @return float* 
+ */
+float* vec_fromto(float *dst, float* start, float* end) {
+    for (int i=0; i<3; i++) {
+        dst[i] = end[i]-start[i];
+    }
+    return dst;
+}
+
+/**
+ * @brief returns the sextant number: div 2 -> axis, mod 2 -> orientation.
+ * 
+ * @param center 
+ * @param other 
+ * @return int 
+ */
+int vec_sextant(float* center, float* other) {
+    float v[3];
+    vec_fromto(v, center, other);
+    if (abs(v[0])<abs(v[1]) && abs(v[0])<abs(v[2])) {
+        return v[0]>=0.0f ? 0 : 1;
+    }
+    if (abs(v[1])<abs(v[0]) && abs(v[1])<abs(v[2])) {
+        return v[1]>=0.0f ? 2 : 3;
+    }
+    if (abs(v[2])<abs(v[0]) && abs(v[2])<abs(v[1])) {
+        return v[2]>=0.0f ? 4 : 5;
+    }
+}

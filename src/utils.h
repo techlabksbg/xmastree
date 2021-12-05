@@ -187,3 +187,23 @@ void vec_print(float *v);
  * @return float* point on curve
  */
 float* bezier2(float* dst, float t, float* pts);
+
+
+/**
+ * @brief computes vector end-start
+ * 
+ * @param dst 
+ * @param start 
+ * @param end 
+ * @return float* 
+ */
+float* vec_fromto(float *dst, float* start, float* end);
+
+/**
+ * @brief returns the sextant number: div 2 -> axis, mod 2 -> orientation.
+ * 
+ * @param center 
+ * @param other 
+ * @return int 
+ */
+int vec_sextant(float* center, float* other);
