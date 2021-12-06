@@ -30,7 +30,7 @@ bool Fire::setGoodParams() {
     params.brightness = 60;
     params.color1 = {255,0,0};
     params.color2 = {0,255,255};
-    return true;
+    return false;
 }
 
 void Fire::stop() {
@@ -60,17 +60,20 @@ void Fire::loop() {
     }
     // Burn 
     for (int i=0; i<NUMPIXEL; i++) {
+        float contrib = 0.0f;
         for (int r=0; r<4; r++) {
             if (params.nbrs[i][r]!=0xffff) {
-                temp[i]+=temp[params.nbrs[i][r]]/4;
+                contrib+=temp[params.nbrs[i][r]]/4;
             }
         }
         if (params.nbrs[i][5]!=0xffff) {
-            float d = temp[params.nbrs[i][5]]-temp[i];
-            temp[i] += d/2;
-            temp[params.nbrs[i][5]] -= d/2;
+            contrib+= temp[params.nbrs[i][5]]*3-2;
+            //temp[params.nbrs[i][5]] -= d/2;
+        } else {
+            contrib+=-0.2;
         }
-        temp[i] *= fmap(params.posdata[i][2], params.mins[2], params.maxs[2], 1.0, 0.3);
+        temp[i] = 0.9*temp[i]+0.1*contrib;
+        temp[i] *= fmap(params.posdata[i][2], params.mins[2], params.maxs[2], 1.0, 0.6);
         if (temp[i]>1.0) temp[i]=1.0;
         if (temp[i]<0.0) temp[i]=0.0;
     }
