@@ -9,7 +9,7 @@
 <body>
 	<script>
 
-function setProgram() {
+function setProgram(complete = true) {
 	if (state['waitForIt'] == "dary") return;
 	state['waitForIt'] = "dary";
 	var xhttp = new XMLHttpRequest();
@@ -22,9 +22,16 @@ function setProgram() {
 	};
 	var url = '/prg';
 	var sep = "?";
-	for (const [key, value] of Object.entries(state)) {
-		url+=sep+key+"="+value
-		sep="&";
+	if (complete) {
+		for (const [key, value] of Object.entries(state)) {
+			url+=sep+key+"="+value
+			sep="&";
+		}
+	} else {
+		for (const [key, value] of Object.entries({drawx:state.drawx, drawy:state.drawy})) {
+			url+=sep+key+"="+value
+			sep="&";
+		}
 	}
 	console.log(url);
 	xhttp.open("GET", url, true);
@@ -100,7 +107,7 @@ function handleMove(evt) {
 		//document.getElementById("console").innerHTML = "Touch to "+state.drawx+", "+state.drawy+"  padcoords = "+padcoords[0]+", "+padcoords[1];
 		if (state.drawx>0 && state.drawx<400 && state.drawy>0 && state.drawy<400) {
 			
-			setProgram();
+			setProgram(false);
 		}
 	} else {
 		isCool = (event.buttons!=0);
@@ -109,7 +116,7 @@ function handleMove(evt) {
 		if (isCool) {
 			//document.getElementById("console").innerHTML = "Mouse to "+state.drawx+", "+state.drawy+"  padcoords = "+padcoords[0]+", "+padcoords[1];
 			if (state.drawx>0 && state.drawx<400 && state.drawy>0 && state.drawy<400) {
-				setProgram();
+				setProgram(false);
 			}
 		}
 	}
