@@ -16,14 +16,14 @@ bool Stars::setGoodParams() {
     return true;
 }
 void Stars::loop() {
-    float dist = 25;
-    float t = fmod(secs()/fmap(params.speed, 0, 255, 20, 1.0),1.0);
+    float dist = 37;
+    float t = secs()/fmap(params.speed, 0, 255, 20, 1.0);
     RgbColor color = mix((sin(t*2*PI)+1)/2);
     for (int i=0; i<NUMPIXEL; i++) {
         float v = abs(fmod((i+t*dist),dist)-dist/2)/(dist/2); // Triangle function [0,dist] -> [0,1]
         v = pow(v,8);
-        color = scale(v, color);
-        params.pixels->SetPixelColor(i, color);
+        RgbColor c = scale(v, color);
+        params.pixels->SetPixelColor(i, c);
     }
     params.pixels->Show();
 }
