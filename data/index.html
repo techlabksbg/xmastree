@@ -32,6 +32,8 @@ function setProgram(complete = true) {
 			url+=sep+key+"="+value
 			sep="&";
 		}
+		url+=sep+"nr="+buttonNumbers['Drawing'];
+		state.nr = buttonNumbers['Drawing'];
 	}
 	console.log(url);
 	xhttp.open("GET", url, true);
@@ -50,6 +52,8 @@ state = {
 	'drawx':0,
 	'drawy':0,
 };
+
+buttonNumbers= {};
 
 function mod(a,b) {
 	return a - Math.floor(a/b)*b;
@@ -110,9 +114,10 @@ function handleMove(evt) {
 			setProgram(false);
 		}
 	} else {
-		isCool = (event.buttons!=0);
-		state.drawx = event.clientX - padcoords[0];
-		state.drawy = event.clientY - padcoords[1];
+		isCool = (evt.buttons!=0);
+		var bb = document.getElementById("treebg").getBoundingClientRect();
+		state.drawx = evt.clientX - bb.x;
+		state.drawy = evt.clientY - bb.y;
 		if (isCool) {
 			//document.getElementById("console").innerHTML = "Mouse to "+state.drawx+", "+state.drawy+"  padcoords = "+padcoords[0]+", "+padcoords[1];
 			if (state.drawx>0 && state.drawx<400 && state.drawy>0 && state.drawy<400) {
@@ -134,6 +139,12 @@ document.addEventListener("DOMContentLoaded", function() {
 		pad.addEventListener("dragmove", handleMove, true);
 		pad.addEventListener("dragend", handleMove, true);
 		pad.addEventListener("click", handleMove, true);
+
+		var buttons = document.getElementsByClassName('button');
+		for (var i = 0; i<buttons.length; i++) {
+			buttonNumbers[buttons[i].innerText] =  i;
+		}
+		console.log(buttonNumbers);
 });
 
 
