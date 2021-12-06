@@ -20,7 +20,7 @@
 #define SPI_MISO      19
 #define SPI_SCK       18
 
-//#define WIFIDEBUG
+#define WIFIDEBUG
 
 #ifdef WIFIDEBUG
 #include "WiFi.h"
@@ -51,7 +51,7 @@ struct Params {
     RgbColor color2 = RgbColor(0,0,255);
     String text = "TECHLAB";
     float posdata[NUMPIXEL][3];
-    uint16_t nbrs[NUMPIXEL][6]; // Ein Nachbar pro Sextant
+    uint16_t nbrs[NUMPIXEL][6]; // Ein Nachbar pro Koordinatenrichtung 0/1 x(+/-), 2/3 y(+/-), 4/5 z(+/-)
     std::vector<App*> apps;
 #ifdef WIFIDEBUG
     MyNeoPixel* pixels;

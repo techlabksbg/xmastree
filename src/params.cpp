@@ -47,7 +47,7 @@ int Params::getAppId(const char* name) {
     return -1;
 }
 
-// Idee: nächste LED in jedem Oktanten!
+
 void Params::computeNbrs() {
     Serial.println("Computing neighbors");
     for (int i=0; i<NUMPIXEL; i++) {
