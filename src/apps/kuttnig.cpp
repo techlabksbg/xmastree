@@ -11,7 +11,7 @@ class Kuttnig : App {
 };
 
 bool Kuttnig::setGoodParams() {
-    params.speed = 150;
+    params.speed = 255;
     return true;
 }
 
