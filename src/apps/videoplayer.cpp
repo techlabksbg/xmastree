@@ -147,8 +147,10 @@ void VideoPlayer::loop() {
             int y = (fileHeader.frameheight-(led[2]+zoff)*mul);
             if (x>=0 && y>=0 && x<fileHeader.framewidth && y<fileHeader.frameheight) {
                 uint8_t* pt = (uint8_t*)framedata+y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp;
-                if (fileHeader.bpp==3) {
-                    color = {*(pt+2), *(pt+1), *(pt)};
+                if (fileHeader.bpp==3) { 
+                    color.R = *(pt+2);
+                    color.G = *(pt+1);
+                    color.B = *(pt+0);
                 } else {
                     color = params.color1;
                     color.Darken(255-*pt);
