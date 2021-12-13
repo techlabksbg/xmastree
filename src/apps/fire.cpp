@@ -12,6 +12,7 @@ class Fire : App {
     bool justStarted = true;
     HslColor tempToColor(float f);
     float* temp = nullptr;
+    float* diff = nullptr;
 };
 
 // Color for temp in [0,1]
@@ -39,6 +40,10 @@ void Fire::stop() {
         delete[] temp;
         temp = nullptr;
     }
+    if (diff!=nullptr) {
+        delete[] diff;
+        diff = nullptr;
+    }
 }
 
 
@@ -48,32 +53,46 @@ void Fire::loop() {
         if (temp) {
             delete[] temp;
         }
+        if (diff) {
+            delete[] diff;
+        }
         temp = new float[NUMPIXEL];
+        diff = new float[NUMPIXEL];
         for (int i=0; i<NUMPIXEL; i++) {
-            temp[i] = 0.0;
+            temp[i] = 0.0f;
+            diff[i] = 0.0f;
         }
     }
     for (int i=0; i<NUMPIXEL; i++) {
+        diff[i] = 0.0f;
         if (params.posdata[i][2]<40 && random(100)==0) {
             temp[i] = 1.0;
         }
     }
     // Burn 
     for (int i=0; i<NUMPIXEL; i++) {
-        float contrib = 0.0f;
+
+        // spread around
         for (int r=0; r<4; r++) {
             if (params.nbrs[i][r]!=0xffff) {
-                contrib+=temp[params.nbrs[i][r]]/4;
-            }
+                int j = params.nbrs[i][r];
+                float d = (temp[j] - temp[i])/20;
+                diff[i]+=d/10;
+                diff[j]-=d/10;
+             } else {
+                 diff[i]-=temp[i]/5;
+             }
         }
         if (params.nbrs[i][5]!=0xffff) {
-            contrib+= temp[params.nbrs[i][5]]*3-2;
-            //temp[params.nbrs[i][5]] -= d/2;
+            int j = params.nbrs[i][5];
+            float d = (temp[j]-temp[i])/5;
+            diff[i] += d;
+            diff[j] -= d;
         } else {
-            contrib+=-0.2;
+            diff[i] -= temp[i]/5;
         }
-        temp[i] = 0.9*temp[i]+0.1*contrib;
-        temp[i] *= fmap(params.posdata[i][2], params.mins[2], params.maxs[2], 1.0, 0.6);
+        //diff[i] += temp[i]*fmap(params.posdata[i][2], params.mins[2], params.maxs[2], 0.2, -0.1);
+        temp[i] += diff[i];
         if (temp[i]>1.0) temp[i]=1.0;
         if (temp[i]<0.0) temp[i]=0.0;
     }
