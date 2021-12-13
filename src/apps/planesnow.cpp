@@ -41,7 +41,7 @@ bool PlaneSnow::setGoodParams() {
     params.speed = 180;
     params.brightness = 60;
     params.color1 = {255,255,255};
-    params.color2 = {0,0,20};
+    params.color2 = {0,0,255};
     return true;
 }
 
@@ -55,12 +55,14 @@ void PlaneSnow::loop() {
         sec = 0.0;
     }
     float d = sec*(dm[0]-dm[1])+dm[1];
+    RgbColor back = params.color2;
+    back.Darken(230);
     for (int i=0; i<NUMPIXEL; i++) {
         float dd = vec_dot(n, params.posdata[i])-d;
-        if (dd<20 && dd>0) {
-            params.pixels->SetPixelColor(i,mix(dd/20));
+        if (dd<20 && dd>0) {            
+            params.pixels->SetPixelColor(i,RgbColor::LinearBlend(params.color1, back, dd/20));
         } else {
-            params.pixels->SetPixelColor(i,params.color2);
+            params.pixels->SetPixelColor(i,back);
         }
     }
     params.pixels->Show();
