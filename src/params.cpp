@@ -56,12 +56,24 @@ void Params::computeNbrs() {
         }
         for (int j=0; j<NUMPIXEL; j++) {
             if (i!=j) {                
-                int sextant = vec_sextant(params.posdata[i], params.posdata[j]);
-                if (nbrs[i][sextant]==0xffff || abs(params.posdata[i][sextant/2]-params.posdata[j][sextant/2]) < abs(params.posdata[i][sextant/2]-params.posdata[nbrs[i][sextant]][sextant/2])) {
+                int sextant = vec_sextant(posdata[i], posdata[j]);
+                if (nbrs[i][sextant]==0xffff || abs(posdata[i][sextant/2]-posdata[j][sextant/2]) < abs(posdata[i][sextant/2]-posdata[nbrs[i][sextant]][sextant/2])) {
                     nbrs[i][sextant] = j;
                 }
             }
         }
+        /*
+        Serial.printf("LED %d at ",i);
+        vec_print(posdata[i]);
+        Serial.println();
+        for (int k=0; k<6; k++) {  // no neighbor in this direction
+            Serial.printf("    %d -> %d   ", k, nbrs[i][k]);
+            if (nbrs[i][k]!=0xffff) {
+                vec_print(posdata[nbrs[i][k]]);
+            }
+            Serial.println();
+        }
+        */
     }
 }
 

@@ -244,10 +244,10 @@ float* vec_fromto(float *dst, float* start, float* end) {
 int vec_sextant(float* center, float* other) {
     float v[3];
     vec_fromto(v, center, other);
-    if (abs(v[0])<=abs(v[1]) && abs(v[0])<=abs(v[2])) {
+    if (abs(v[0])>=abs(v[1]) && abs(v[0])>=abs(v[2])) {
         return v[0]>=0.0f ? 0 : 1;
     }
-    if (abs(v[1])<=abs(v[0]) && abs(v[1])<=abs(v[2])) {
+    if (abs(v[1])>=abs(v[0]) && abs(v[1])>=abs(v[2])) {
         return v[1]>=0.0f ? 2 : 3;
     }
     return v[2]>=0.0f ? 4 : 5;
