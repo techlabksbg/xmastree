@@ -11,7 +11,7 @@ scroll = 1 if len(sys.argv)==2 else 0
 headwritten = False
 
 def gamma(colorvalues): 
-    return bytes([v*v//255 for v in colorvalues])
+    return bytes([int(v)*int(v)//255 for v in colorvalues])
 
 for fname in sys.argv[1:]:
     print(fname, end="\r");
@@ -42,7 +42,10 @@ for fname in sys.argv[1:]:
             if gray:
                 out.write(bytes([img[y][x]]))
             else:
-                out.write(gamma(bytes(img[y][x][0:3])))
+                if (x==0 and y==0):
+                    print(img[y][x][0:3])
+                    print(list(gamma(img[y][x][0:3])))
+                out.write(gamma(img[y][x][0:3]))
 
 
 out.close()
