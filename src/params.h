@@ -12,7 +12,7 @@
 #define NUMPIXEL 500
 // See https://github.com/Makuna/NeoPixelBus/wiki/ESP32-NeoMethods  (NeoEsp32BitBang800KbpsMethod works, but...)
 // NeoEsp32I2s1800KbpsMethod works in a minimal example but not here...
-#define PIXELCONFIG NeoPixelBus<NeoGrbFeature, NeoEsp32I2s1800KbpsMethod>
+#define PIXELCONFIG NeoPixelBus<NeoRgbFeature, NeoEsp32I2s1800KbpsMethod>
 
 // Pins for SD-Card
 #define SD_CS          5
