@@ -15,19 +15,23 @@ void EasterEgg::loop() {
     t = t/fmap(params.speed, 0, 255, 20, 1.0);
 
     float centers[3][3] = {{10,4.22,140}, {10,-15,50}, {10,30,40}};
-    float r = 25*25;
-    
+    float r = 25;
+    for (int j=0; j<3; j++) {
+        vec_rotxy(centers[j], centers[j], t);
+    }
+
     for (int i=0; i<NUMPIXEL; i++) {
+        
         bool inside = false;
         for (int j=0; j<3; j++) {
-            if (vec_dist2(params.posdata[i], centers[j])<r) {
+            if (vec_dist(params.posdata[i], centers[j])<r) {
                 inside = true;
             }
         }
-        if (abs(params.posdata[i][0]<=17 && params.posdata[i][2]>=20 && params.posdata[i][2]<=140)) {
+        if (abs(params.posdata[i][0])<=17 && abs(params.posdata[i][1])<=17 && params.posdata[i][2]>=20 && params.posdata[i][2]<=140) {
             inside = true;
         }
-        bool fountain = (params.posdata[i][2] >= fmod(140+(50*t),80) && params.posdata[i][2]<= fmod(160+(50*t),80) && abs(params.posdata[i][1]) <= 5 && abs(params.posdata[i][0]) <= 5);
+        bool fountain = (params.posdata[i][2] >= 140+fmod((50*t),80) && params.posdata[i][2]<=160+fmod((50*t),80) && abs(params.posdata[i][1]) <= 5 && abs(params.posdata[i][0]) <= 5);
         if (inside || fountain) {
             params.pixels->SetPixelColor(i, RgbColor(255));
         } else {
@@ -39,4 +43,4 @@ void EasterEgg::loop() {
 
 
 // Instantiate (this will also register it into params)
-//EasterEgg fade;
+EasterEgg easterEgg;
