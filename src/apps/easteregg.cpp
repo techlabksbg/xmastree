@@ -12,12 +12,12 @@ class EasterEgg : App {
 
 void EasterEgg::loop() {   
     float t = secs();  // Get time in seconds
-    t = t/fmap(params.speed, 0, 255, 20, 1.0);
+    t = t/fmap(params.speed, 0, 255, 10, 0.5);
 
     float centers[3][3] = {{10,4.22,140}, {10,-15,50}, {10,30,40}};
     float r = 25;
     for (int j=0; j<3; j++) {
-        vec_rotxy(centers[j], centers[j], t);
+        vec_rotxy(centers[j], centers[j], t*0.1);
     }
 
     for (int i=0; i<NUMPIXEL; i++) {
