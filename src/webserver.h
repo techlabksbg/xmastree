@@ -14,7 +14,7 @@ public:
 
 private:
 
-    void setupWiFi(bool ap);
+    void setupWiFi();
     void setupOTA();
     void setupHTTP();
     void setupMDNS();
@@ -22,6 +22,6 @@ private:
 
     AsyncWebServer* server;
     DNSServer * dnsServer;
-    bool isAp = true;
+    bool isAp = false;
 
 };
