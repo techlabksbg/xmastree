@@ -44,7 +44,7 @@ void ColorSphere::start() {
 
 bool ColorSphere::setGoodParams() {
     params.speed = 200;
-    return true;
+    return false;
 }
 
 void ColorSphere::loop() {
