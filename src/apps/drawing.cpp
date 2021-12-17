@@ -11,7 +11,7 @@ class Drawing : App {
 void Drawing::loop() {
     const float r = 6;
     if (params.drawx || params.drawy) {
-        float x = (200-params.drawx)/400.0*180;
+        float x = -(200-params.drawx)/400.0*180;
         float z = (400-params.drawy)/400.0*180;
         params.drawx = 0;
         params.drawy = 0;
