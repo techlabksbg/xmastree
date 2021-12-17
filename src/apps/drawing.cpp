@@ -19,7 +19,7 @@ void Drawing::loop() {
         for (int i=0; i<NUMPIXEL; i++) {
             float zz = abs(z-params.posdata[i][2]);
             if (zz<r) {
-                float xx = abs(x-params.posdata[i][0]);
+                float xx = abs(x-params.posdata[i][1]);
                 if (xx<r) {
                     xx = xx*xx+zz*zz;
                     if (xx<r*r) {

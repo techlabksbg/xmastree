@@ -22,7 +22,7 @@ class VideoPlayer : App {
     private:
 
     void getFileNames();
-    float angle = PI/2;//PI/3; // 0.0 projection onto x or or PI/2 for projection onto y
+    float angle = 0.0; // PI/2;//PI/3; // 0.0 projection onto x or or PI/2 for projection onto y
     bool filesRead = false;
     std::vector<String> fileNames;
 
