@@ -8,21 +8,8 @@ import math
 NUMLEDS = 500
 
 # Measures in cm
-# campos = np.mat([[230,50,90]]).transpose()
-#campos = np.mat([[146,210,118]]).transpose() # Auf tisch
-# campos = np.mat([[-40,250,87]]).transpose() # Hinter balken
-# campos = np.mat([[165, 197,118]]).transpose()
-# campos = np.mat([[227,93,86]]).transpose()
-a = -76
-b = 220
-w = -math.pi/4
-print(w)
-x = a*math.cos(w)-b*math.sin(w)
-y = a*math.sin(w)+b*math.cos(w)
-print(x,y)
-campos = np.mat([[x,y,62]]).transpose() # Hinter balken
-
-#campos = np.mat([[237,24,65]]).transpose() # Hinter balken
+#campos = np.mat([[166,166,70]]).transpose()
+campos = np.mat([[0,233,70]]).transpose()
 
 
 # Matrix to get space coordinates
@@ -38,8 +25,9 @@ print("baumpoly")
 print(baumpoly)
 
 def setLed(nr):
-    conn = http.client.HTTPConnection("192.168.42.1",80)
+#    conn = http.client.HTTPConnection("192.168.42.1",80)
 #    conn = http.client.HTTPConnection("192.168.1.75",80)
+    conn = http.client.HTTPConnection("xmastree",80)
     conn.request("GET", "/setled?led=%d"%nr)
     r = conn.getresponse()
     data = r.read()
