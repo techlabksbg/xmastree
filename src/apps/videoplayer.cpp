@@ -93,7 +93,7 @@ void VideoPlayer::loop() {
         return;
     }
     if (millis()>nextFrame) {
-        nextFrame = millis()+fmap(params.speed, 0, 255, 200, 16); // 15ms update time for 500 LEDs
+        nextFrame = millis()+fmap(params.speed, 0, 255, 200, 25); // 15ms update time for 500 LEDs
         if (!bitmap) {
             bitmap = SD.open(fileNames[active]);
             if (!bitmap) {
