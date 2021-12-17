@@ -6,6 +6,13 @@
 #include <ESPmDNS.h>
 #include <DNSServer.h>
 
+#if __has_include("secrets.h")
+#include "secrets.h"
+#else 
+// Define your secrets in this manner in secrets.h
+#define WIFI_SSID "tech-lab"
+#define WIFI_PASS "tech-lab"
+#endif
 
 // OTA
 #include <WiFiUdp.h>
@@ -54,11 +61,11 @@ void getTimeFromNTP() {
   WiFi.disconnect();
 }
 
-void WebServer::setupWiFi(bool ap) {
-    if (!ap) { // connect to TEch-Lab network
+void WebServer::setupWiFi() {
+    if (!isAp) { // connect to TEch-Lab network
         WiFi.mode(WIFI_STA);
         Serial.println(WiFi.macAddress());
-        WiFi.begin("tech-lab", "tech-lab");
+        WiFi.begin(WIFI_SSID, WIFI_PASS);
         Serial.print("Connecting to WiFi ");
         int retry = 10;
         while (WiFi.waitForConnectResult() != WL_CONNECTED) {
@@ -135,7 +142,9 @@ void WebServer::setupMDNS() {
         // nicht sicher, ob die folgende Zeile nötig ist, macht aber Sinn...
         // mdns_service_add(NULL, "_http", "_tcp", 80, NULL, 0);
         MDNS.addService("_http", "_tcp", 80);
-        MDNS.addService("_dns", "_udp", 53);
+        if (isAp) {
+          MDNS.addService("_dns", "_udp", 53);
+        }
     }
 }
 
@@ -416,11 +425,13 @@ void WebServer::setupHTTP() {
 
 void WebServer::begin(bool accessPoint) {
     isAp = accessPoint;
-    setupWiFi(accessPoint);
+    setupWiFi();
     setupOTA();
     setupHTTP();
     setupMDNS();
-    setupDNS();
+    if (isAp) {
+      setupDNS();
+    }
   }
 
   void WebServer::loop() {
