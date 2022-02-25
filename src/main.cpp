@@ -41,6 +41,7 @@ unsigned long nextStep = millis();
 bool fastLoop = false;
 
 void loop() {
+    
     webserver->loop();    
     // init
     if (params.lastCmd+120*1000<millis() || params.lastCmd == 0) {
@@ -76,3 +77,4 @@ void loop() {
         autoplayer();
     }
 }
+

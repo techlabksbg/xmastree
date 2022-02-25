@@ -43,4 +43,4 @@ void EasterEgg::loop() {
 
 
 // Instantiate (this will also register it into params)
-EasterEgg easterEgg;
+//EasterEgg easterEgg;

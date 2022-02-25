@@ -166,4 +166,4 @@ void VideoPlayer::loop() {
 
 }
 
-VideoPlayer videoPlayer;
+//VideoPlayer videoPlayer;

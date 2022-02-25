@@ -70,4 +70,4 @@ void PlaneSnow::loop() {
 
 
 // Instantiate (this will also register it into params)
-PlaneSnow planeSnow;
+//PlaneSnow planeSnow;

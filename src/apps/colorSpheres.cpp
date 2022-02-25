@@ -68,4 +68,4 @@ void ColorSphere::loop() {
 }
 
 // Instantiate (this will also register it into params)
-ColorSphere colorSphere;
+//ColorSphere colorSphere;

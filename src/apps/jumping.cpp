@@ -115,4 +115,4 @@ void Jumping::loop() {
 
 
 // Instantiate (this will also register it into params)
-Jumping jumping;
+//Jumping jumping;

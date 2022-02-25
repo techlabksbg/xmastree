@@ -46,4 +46,4 @@ void RainSphere::loop() {
 }
 
 // Instantiate (this will also register it into params)
-RainSphere rainsphere;
+//RainSphere rainsphere;

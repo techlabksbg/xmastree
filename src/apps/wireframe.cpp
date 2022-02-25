@@ -99,4 +99,4 @@ void WireFrame::loop() {
 
 
 // Instantiate (this will also register it into params)
-WireFrame wireframe;
+//WireFrame wireframe;

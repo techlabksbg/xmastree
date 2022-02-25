@@ -31,4 +31,4 @@ void Kuttnig::loop() {
 
 
 // Instantiate (this will also register it into params)
-Kuttnig kuttnig;
+//Kuttnig kuttnig;

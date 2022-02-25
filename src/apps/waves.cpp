@@ -33,4 +33,4 @@ void Wave::loop() {
 
 
 // Instantiate (this will also register it into params)
-Wave wave;
+//Wave wave;

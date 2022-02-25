@@ -126,4 +126,4 @@ void Fire::loop() {
 
 
 // Instantiate (this will also register it into params)
-Fire fire;
+//Fire fire;

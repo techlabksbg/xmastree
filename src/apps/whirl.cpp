@@ -57,4 +57,4 @@ void Whirl::loop() {
 
 
 // Instantiate (this will also register it into params)
-Whirl whirl;
+//Whirl whirl;

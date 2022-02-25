@@ -38,8 +38,8 @@ class MyNeoPixel : public PIXELCONFIG {
 #endif
 
 struct Params {
-    int activeProgram = 4;
-    int newProgram = 2;
+    int activeProgram = 0;
+    int newProgram = 0;
     int brightness = 255;
     int speed = 200;
     int singlePixel = -1;

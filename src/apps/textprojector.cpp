@@ -226,4 +226,4 @@ void TextProjector::loop(){
     }
 }
 
-TextProjector textProjector;
+//TextProjector textProjector;

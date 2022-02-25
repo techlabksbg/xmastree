@@ -46,4 +46,4 @@ void MovingPlane::loop() {
 
 
 // Instantiate (this will also register it into params)
-MovingPlane movingplane;
+//MovingPlane movingplane;

@@ -23,7 +23,7 @@
  * 
 *********/
 
-const char* hostname = "xmastree";
+const char* hostname = "ledwall";
 
 
 WebServer::WebServer() {}
@@ -325,12 +325,14 @@ void WebServer::setupHTTP() {
         params.drawy = request->getParam("drawy")->value().toInt();
       }
       int drawId = params.getAppId("Drawing");
-      if (params.drawx || params.drawy) {
-        if (drawId>=0) {
-          params.newProgram = drawId;
-          status += params.drawx;
-          status += ", ";
-          status += params.drawy;
+      if (drawId>=0) {
+        if (params.drawx || params.drawy) {
+          if (drawId>=0) {
+            params.newProgram = drawId;
+            status += params.drawx;
+            status += ", ";
+            status += params.drawy;
+          }
         }
       }
     }
