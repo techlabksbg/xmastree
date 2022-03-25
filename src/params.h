@@ -50,8 +50,7 @@ struct Params {
     RgbColor color1 = RgbColor(255,0,0);
     RgbColor color2 = RgbColor(0,0,255);
     String text = "TECHLAB";
-    float posdata[NUMPIXEL][3];
-    uint16_t nbrs[NUMPIXEL][6]; // Ein Nachbar pro Koordinatenrichtung 0/1 x(+/-), 2/3 y(+/-), 4/5 z(+/-)
+    float posdata[NUMPIXEL][2];
     std::vector<App*> apps;
 #ifdef WIFIDEBUG
     MyNeoPixel* pixels;
@@ -59,11 +58,10 @@ struct Params {
     //Adafruit_NeoPixel* pixels;
     PIXELCONFIG* pixels;// strip(PixelCount, PixelPin);
 #endif
-    std::vector<float> mins = std::vector<float> (3, 500);
-    std::vector<float> maxs = std::vector<float> (3, -500);
+    std::vector<float> mins = std::vector<float> (2, 500);
+    std::vector<float> maxs = std::vector<float> (2, -500);
     
     void readPosData();
-    void computeNbrs(); // compute neighbors
     void begin();
     int getAppId(const char* name);
 

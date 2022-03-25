@@ -14,14 +14,13 @@ void Params::begin() {
 #endif
     pixels->Begin();
     readPosData();
-    computeNbrs();
 }
 
 void Params::readPosData() {
     File f = SPIFFS.open("/posdata.txt", FILE_READ);
     if (f) {
         for (int i=0; i<NUMPIXEL; i++) {
-            for (int k=0; k<3; k++) {
+            for (int k=0; k<2; k++) {
                 posdata[i][k] = f.parseFloat();
                 if (posdata[i][k] > maxs[k]){
                     maxs[k] = posdata[i][k];
@@ -29,7 +28,6 @@ void Params::readPosData() {
                 if (posdata[i][k] < mins[k]){
                     mins[k] = posdata[i][k];
                 }
-                
             }
         }
         f.close();
@@ -48,34 +46,6 @@ int Params::getAppId(const char* name) {
 }
 
 
-void Params::computeNbrs() {
-    Serial.println("Computing neighbors");
-    for (int i=0; i<NUMPIXEL; i++) {
-        for (int k=0; k<6; k++) {  // no neighbor in this direction
-            nbrs[i][k] = 0xffff;
-        }
-        for (int j=0; j<NUMPIXEL; j++) {
-            if (i!=j) {                
-                int sextant = vec_sextant(posdata[i], posdata[j]);
-                if (nbrs[i][sextant]==0xffff || abs(posdata[i][sextant/2]-posdata[j][sextant/2]) < abs(posdata[i][sextant/2]-posdata[nbrs[i][sextant]][sextant/2])) {
-                    nbrs[i][sextant] = j;
-                }
-            }
-        }
-        /*
-        Serial.printf("LED %d at ",i);
-        vec_print(posdata[i]);
-        Serial.println();
-        for (int k=0; k<6; k++) {  // no neighbor in this direction
-            Serial.printf("    %d -> %d   ", k, nbrs[i][k]);
-            if (nbrs[i][k]!=0xffff) {
-                vec_print(posdata[nbrs[i][k]]);
-            }
-            Serial.println();
-        }
-        */
-    }
-}
 
 #ifdef WIFIDEBUG
 

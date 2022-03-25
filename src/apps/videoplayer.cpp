@@ -125,9 +125,9 @@ void VideoPlayer::loop() {
             bitmap.readBytes(framedata+(fileHeader.framewidth-1)*fileHeader.frameheight*fileHeader.bpp, fileHeader.frameheight*fileHeader.bpp);
         }
         framenumber++;
-        float led[3];
-        float mul = fileHeader.frameheight/(params.maxs[2]-params.mins[2]);
-        float zoff = -params.mins[2];
+        float led[2];
+        float mul = fileHeader.frameheight/(params.maxs[1]-params.mins[1]);
+        float yoff = -params.mins[1];
         float xoff = -params.mins[0];     
         /*if (framenumber<10) {
         for (int y=0; y<fileHeader.frameheight; y++) {
@@ -142,9 +142,10 @@ void VideoPlayer::loop() {
         }}*/
         for (int i=0; i<NUMPIXEL; i++) {
             RgbColor color = {0,0,0};
-            vec_rotxy(led, params.posdata[i], -angle);
-            int x = (led[1]+xoff)*mul;
-            int y = (fileHeader.frameheight-(led[2]+zoff)*mul);
+            led[0] = params.posdata[i][0];
+            led[1] = params.posdata[i][1];
+            int x = (led[0]+xoff)*mul;
+            int y = (fileHeader.frameheight-(led[1]+yoff)*mul);
             if (x>=0 && y>=0 && x<fileHeader.framewidth && y<fileHeader.frameheight) {
                 uint8_t* pt = (uint8_t*)framedata+y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp;
                 if (fileHeader.bpp==3) { 
@@ -163,7 +164,6 @@ void VideoPlayer::loop() {
             stop();
         }
     }
-
 }
 
 //VideoPlayer videoPlayer;
