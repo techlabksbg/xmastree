@@ -145,7 +145,7 @@ void VideoPlayer::loop() {
             led[0] = params.posdata[i][0];
             led[1] = params.posdata[i][1];
             int x = (led[0]+xoff)*mul;
-            int y = (fileHeader.frameheight-(led[1]+yoff)*mul);
+            int y = (led[1]+yoff)*mul;
             if (x>=0 && y>=0 && x<fileHeader.framewidth && y<fileHeader.frameheight) {
                 uint8_t* pt = (uint8_t*)framedata+y*fileHeader.bpp + x*fileHeader.frameheight*fileHeader.bpp;
                 if (fileHeader.bpp==3) { 
@@ -166,4 +166,4 @@ void VideoPlayer::loop() {
     }
 }
 
-//VideoPlayer videoPlayer;
+VideoPlayer videoPlayer;

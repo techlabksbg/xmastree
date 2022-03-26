@@ -29,7 +29,7 @@ for fname in sys.argv[1:]:
         h,w = img.shape[0:2]
         print("Image size: %dx%d" % (w,h))
 
-        ww = min([w, int(h/180.0*140.0)])
+        ww = min([w, int(h*2)])
         print("Writing header with %d x %d" % (ww,h))
         header = [ww, h, scroll, bpp]  # 1 scrolling, 1 bpp
         b = b''
