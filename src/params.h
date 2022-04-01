@@ -5,14 +5,9 @@
 #include "SPIFFS.h"
 #include "app.h"
 #include "SD.h"
+#include "mypixel.h"
 
 
-
-#define PIN 13
-#define NUMPIXEL 500
-// See https://github.com/Makuna/NeoPixelBus/wiki/ESP32-NeoMethods  (NeoEsp32BitBang800KbpsMethod works, but...)
-// NeoEsp32I2s1800KbpsMethod works in a minimal example but not here...
-#define PIXELCONFIG NeoPixelBus<NeoRgbFeature, NeoEsp32I2s1800KbpsMethod>
 
 // Pins for SD-Card
 #define SD_CS          5
@@ -20,22 +15,7 @@
 #define SPI_MISO      19
 #define SPI_SCK       18
 
-//#define WIFIDEBUG
-
-#ifdef WIFIDEBUG
-#include "WiFi.h"
-class MyNeoPixel : public PIXELCONFIG {
-    public:
-    byte* buffer;
-    byte* colorData;
-    MyNeoPixel(uint16_t n, int16_t pin);
-
-    WiFiUDP udp;
-
-    void Show();
-};
-
-#endif
+#define NUMPIXEL 500
 
 struct Params {
     int activeProgram = 0;
@@ -52,12 +32,7 @@ struct Params {
     String text = "TECHLAB";
     float posdata[NUMPIXEL][2];
     std::vector<App*> apps;
-#ifdef WIFIDEBUG
-    MyNeoPixel* pixels;
-#else
-    //Adafruit_NeoPixel* pixels;
-    PIXELCONFIG* pixels;// strip(PixelCount, PixelPin);
-#endif
+    MyPixel* pixels;// strip(PixelCount, PixelPin);
     std::vector<float> mins = std::vector<float> (2, 500);
     std::vector<float> maxs = std::vector<float> (2, -500);
     

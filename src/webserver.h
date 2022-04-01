@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ESPAsyncWebServer.h"
-#include <ArduinoOTA.h>
-#include "DNSServer.h"
+//#include <ArduinoOTA.h>
+//#include "DNSServer.h"
 
 
 
@@ -15,13 +15,13 @@ public:
 private:
 
     void setupWiFi();
-    void setupOTA();
+//    void setupOTA();
     void setupHTTP();
     void setupMDNS();
-    void setupDNS();
+//    void setupDNS();
 
     AsyncWebServer* server;
-    DNSServer * dnsServer;
+//    DNSServer * dnsServer;
     bool isAp = false;
 
 };

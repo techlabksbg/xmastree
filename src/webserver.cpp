@@ -90,15 +90,15 @@ void WebServer::setupWiFi() {
         Serial.println(WiFi.softAPIP());
     }
 }
-
+/*
 void WebServer::setupDNS() {
   dnsServer  = new DNSServer();
   // according to https://stackoverflow.com/questions/54583818/esp-auto-login-accept-message-by-os-with-redirect-to-page-like-public-wifi-port
   dnsServer->setErrorReplyCode(DNSReplyCode::NoError);
   dnsServer->start(53, "*", WiFi.softAPIP());
 
-}
-
+}*/
+/*
 void WebServer::setupOTA() {
     ArduinoOTA.setPort(3232);
     ArduinoOTA.setHostname(hostname);
@@ -130,7 +130,7 @@ void WebServer::setupOTA() {
     });
 
   ArduinoOTA.begin();
-}
+}*/
 
 void WebServer::setupMDNS() {
     // Set up Hostname
@@ -428,15 +428,15 @@ void WebServer::setupHTTP() {
 void WebServer::begin(bool accessPoint) {
     isAp = accessPoint;
     setupWiFi();
-    setupOTA();
+    //setupOTA();
     setupHTTP();
     setupMDNS();
     if (isAp) {
-      setupDNS();
+      //setupDNS();
     }
   }
 
   void WebServer::loop() {
-    dnsServer->processNextRequest();
-    ArduinoOTA.handle();
+    //dnsServer->processNextRequest();
+    //ArduinoOTA.handle();
   }
