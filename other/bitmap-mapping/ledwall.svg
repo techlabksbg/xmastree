@@ -2,13 +2,16 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="245.61983mm"
+   height="5.9255972mm"
+   viewBox="0 0 245.61983 5.9255972"
    version="1.1"
    id="svg5"
    inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
    sodipodi:docname="ledwall.svg"
+   inkscape:export-filename="/home/ivo/burggraben/informatik/labor/xmastree/xmastree/other/bitmap-mapping/ledwall.png"
+   inkscape:export-xdpi="342.9137"
+   inkscape:export-ydpi="342.9137"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -25,14 +28,18 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="1.0343421"
-     inkscape:cx="499.83464"
-     inkscape:cy="411.85601"
+     inkscape:cx="563.15991"
+     inkscape:cy="119.39957"
      inkscape:window-width="1920"
-     inkscape:window-height="1007"
+     inkscape:window-height="1015"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer1" />
+     inkscape:current-layer="layer1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <defs
      id="defs2">
     <linearGradient
@@ -76,22 +83,44 @@
        x2="32.298035"
        y2="105.5944"
        gradientUnits="userSpaceOnUse"
-       spreadMethod="repeat" />
+       spreadMethod="repeat"
+       gradientTransform="translate(0.47165828,0.06247634)" />
+    <filter
+       style="color-interpolation-filters:sRGB"
+       inkscape:label="Blur"
+       id="filter14518"
+       x="-0.0010300925"
+       y="-0.069190466"
+       width="1.0020602"
+       height="1.1383809">
+      <feGaussianBlur
+         stdDeviation="0.10000000000000001 0.10000000000000001"
+         result="blur"
+         id="feGaussianBlur14516" />
+    </filter>
   </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(0.36316732,-103.34597)">
+    <rect
+       style="fill:#000000;fill-rule:evenodd;stroke:none;stroke-width:4.2022"
+       id="rect8819"
+       width="245.61983"
+       height="5.9255972"
+       x="-0.36316732"
+       y="103.34597" />
     <text
        xml:space="preserve"
-       style="font-size:4.5861px;line-height:1.25;font-family:sans-serif;stroke-width:0.264583;letter-spacing:0.13229167px;fill-opacity:1;fill:url(#linearGradient21110)"
-       x="5.3284187"
-       y="107.91569"
+       style="font-size:4.5861px;line-height:1.25;font-family:sans-serif;letter-spacing:0.79375px;fill:url(#linearGradient21110);fill-opacity:1;stroke-width:0.264583;filter:url(#filter14518)"
+       x="5.8000774"
+       y="107.97817"
        id="text2630"><tspan
          sodipodi:role="line"
          id="tspan2628"
-         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans Bold';stroke-width:0.264583;fill-opacity:1;fill:url(#linearGradient21110)"
-         x="5.3284187"
-         y="107.91569">WILLKOMMMEN IM TECH-LAB. BESUCHE UNS AM FREITAG NACHMITTAG AB 15:45</tspan></text>
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'DejaVu Sans';-inkscape-font-specification:'DejaVu Sans';fill:url(#linearGradient21110);fill-opacity:1;stroke-width:0.264583"
+         x="5.8000774"
+         y="107.97817">WILLKOMMEN IM TECH-LAB. BESUCHE UNS AM FREITAG NACHMITTAG AB 15:45</tspan></text>
   </g>
 </svg>

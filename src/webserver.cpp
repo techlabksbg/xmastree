@@ -386,7 +386,9 @@ void WebServer::setupHTTP() {
             }
             Serial.printf("UploadStart: %s\n", filename.c_str());
         }
+        Serial.printf("file.write with len=%d\n",len);
         file.write(data, len);
+
         if (final) {
             if (file) {
                 file.close();
